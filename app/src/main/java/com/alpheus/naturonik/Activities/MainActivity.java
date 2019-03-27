@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +15,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.Adapters.ProductsAdapter;
@@ -66,16 +63,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_main);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        if (width <= 1080) {
-            spanCount = 3;
-        }
-        if (width > 1080) {
-            spanCount = 5;
-        }
-
-        Log.i("Width", "Width: " + width);
+      /*
 
         recyclerView = findViewById(R.id.recycler_view);
         productList = new ArrayList<>();
@@ -86,38 +74,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        fetchContacts();
+        fetchProducts();*/
     }
 
-    private void fetchContacts() {
-        JsonArrayRequest request = new JsonArrayRequest(URL,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response == null) {
-                            Toast.makeText(getApplicationContext(), "Невозможно получить данные", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-
-                        List<Product> items = new Gson().fromJson(response.toString(), new TypeToken<List<Product>>() {
-                        }.getType());
-
-                        productList.clear();
-                        productList.addAll(items);
-
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.e(TAG, "Ошибка: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), "Ошибка: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        MyApplication.getInstance().addToRequestQueue(request);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,9 +133,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
 
             case R.id.navigation_main:
-
-
-
                 getSupportActionBar().setTitle("Главная");
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, mainFragment).commit();

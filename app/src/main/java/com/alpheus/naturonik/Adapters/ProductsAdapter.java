@@ -110,6 +110,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         };
     }
 
+    public void addData(List<Product> data) {
+        productList.addAll(data);
+        notifyDataSetChanged();
+    }
+
     //ViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
