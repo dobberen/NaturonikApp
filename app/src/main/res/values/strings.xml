@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Naturonik</string>
+
     <string name="title_activity_product">ProductActivity</string>
+
     <string name="action_search">Поиск</string>
     <string name="search_hint">Введите название...</string>
+
+    <string name="nav_account_title">Профиль</string>
+    <string name="nav_favoutite_title">Избранное</string>
+    <string name="nav_search_title">Поиск</string>
+    <string name="nav_cart_title">Корзина</string>
+    <string name="nav_main_title">Главная</string>
 </resources>

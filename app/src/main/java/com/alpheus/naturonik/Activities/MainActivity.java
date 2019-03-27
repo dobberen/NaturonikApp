@@ -3,6 +3,10 @@ package com.alpheus.naturonik.Activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,9 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.Adapters.ProductsAdapter;
+import com.alpheus.naturonik.Fragments.Account;
+import com.alpheus.naturonik.Fragments.Cart;
+import com.alpheus.naturonik.Fragments.Favourites;
+import com.alpheus.naturonik.Fragments.Main;
+import com.alpheus.naturonik.Fragments.Search;
 import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.MyApplication;
 import com.alpheus.naturonik.R;
@@ -29,12 +40,12 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView recyclerView;
-    private List<Product> contactList;
+    private List<Product> productList;
     private ProductsAdapter mAdapter;
 
     private SearchView searchView;
@@ -47,8 +58,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_main);
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -62,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Width", "Width: " + width);
 
         recyclerView = findViewById(R.id.recycler_view);
-        contactList = new ArrayList<>();
-        mAdapter = new ProductsAdapter(this, contactList);
+        productList = new ArrayList<>();
+        mAdapter = new ProductsAdapter(this, productList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -86,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
                         List<Product> items = new Gson().fromJson(response.toString(), new TypeToken<List<Product>>() {
                         }.getType());
 
-                        contactList.clear();
-                        contactList.addAll(items);
+                        productList.clear();
+                        productList.addAll(items);
 
                         mAdapter.notifyDataSetChanged();
                     }
@@ -130,6 +146,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    // Bottom Navigation Bar
+
+    Account accountFragment = new Account();
+    Favourites favouritesFragment = new Favourites();
+    Main mainFragment = new Main();
+    Search searchFragment = new Search();
+    Cart cartFragment = new Cart();
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        switch (menuItem.getItemId()){
+
+            case R.id.navigation_account:
+                getSupportActionBar().setTitle("Профиль");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, accountFragment).commit();
+                return true;
+
+            case R.id.navigation_favourite:
+                getSupportActionBar().setTitle("Избранное");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, favouritesFragment).commit();
+                return true;
+
+            case R.id.navigation_main:
+
+
+
+                getSupportActionBar().setTitle("Главная");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, mainFragment).commit();
+                return true;
+
+            case R.id.navigation_search:
+                getSupportActionBar().setTitle("Поиск");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, searchFragment).commit();
+                return true;
+
+            case R.id.navigation_cart:
+                getSupportActionBar().setTitle("Корзина");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, cartFragment).commit();
+                return true;
+        }
+
+        return false;
     }
 
 
