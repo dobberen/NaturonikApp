@@ -2,11 +2,11 @@ package com.alpheus.naturonik.Models;
 
 public class Product {
     private int id;
-    private String countryName;
-    private String sortName;
+    private String countrys_name;
+    private String sorts_name;
     private String img;
     private String description;
-    private String typePack;
+    private String type_pack;
     private String price;
 
     public Product() {
@@ -29,15 +29,15 @@ public class Product {
     }
 
     public String getCountryName() {
-        return countryName;
+        return countrys_name;
     }
 
     public String getSortName() {
-        return sortName;
+        return sorts_name;
     }
 
     public String getTypePack() {
-        return typePack;
+        return type_pack;
     }
 }
 

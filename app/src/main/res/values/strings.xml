@@ -11,4 +11,6 @@
     <string name="nav_search_title">Поиск</string>
     <string name="nav_cart_title">Корзина</string>
     <string name="nav_main_title">Главная</string>
+    <string name="action_back">Назад</string>
+    <string name="action_favourite">Добавить в избранное</string>
 </resources>

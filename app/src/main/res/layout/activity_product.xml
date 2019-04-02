@@ -4,52 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".Activities.ProductActivity">
 
-    <android.support.v4.widget.NestedScrollView
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:padding="10dp">
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/ic_back"
+            android:clickable="true"
+            android:gravity="start" />
+
+        <Button
+            android:id="@+id/button_favourite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_margin="8dp"
+            android:background="@drawable/ic_favorite_product"
+            android:clickable="true" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey" />
+
+    <ImageView
+        android:id="@+id/product_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
 
+
             <TextView
                 android:id="@+id/product_country"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginRight="10dp"
-                android:text="Страна"
-                android:layout_weight="2"/>
-
-            <ImageView
-                android:layout_width="300dp"
-                android:layout_height="400dp"
-                android:id="@+id/product_thumbnail"
-                android:scaleType="centerCrop"/>
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginRight="@dimen/medium_margin"
+                android:layout_weight="2"
+                android:text="Страна" />
 
             <TextView
                 android:id="@+id/product_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Сорт"
-                android:layout_weight=".5"/>
+                android:layout_weight=".5"
+                android:text="Сорт" />
 
             <TextView
                 android:id="@+id/product_description"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
+                android:layout_weight="7"
                 android:text="Орех"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_weight="7"/>
+                android:textStyle="bold" />
 
 
             <TextView
@@ -57,11 +96,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="0"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+erseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
+" />
 
         </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
+    </ScrollView>
 </LinearLayout>

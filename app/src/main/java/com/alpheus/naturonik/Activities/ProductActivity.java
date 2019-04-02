@@ -3,9 +3,12 @@ package com.alpheus.naturonik.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alpheus.naturonik.Fragments.Main;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 
@@ -38,6 +41,15 @@ public class ProductActivity extends AppCompatActivity {
         tv_product_description.setText(description);
         tv_price.setText(price);
         Glide.with(this).load("https://naturonik.ru/img/" + img).into(img_id);
+
+        Button backButton = findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent backIntent = new Intent(ProductActivity.this, MainActivity.class);
+                startActivity(backIntent);
+            }
+        });
 
     }
 }
