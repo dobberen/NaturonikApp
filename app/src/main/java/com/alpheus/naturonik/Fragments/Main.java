@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alpheus.naturonik.Adapters.ProductsAdapter;
+import com.alpheus.naturonik.DB.DBHelper;
 import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.MyApplication;
 import com.alpheus.naturonik.R;
@@ -22,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -81,15 +84,16 @@ public class Main extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
 
-
-
                         List<Product> items = new Gson().fromJson(response.toString(), new TypeToken<List<Product>>() {
                         }.getType());
+
+                        Log.i("Naturonik", "response:" + response);
 
                         productList.clear();
                         productList.addAll(items);
 
                         adapter.notifyDataSetChanged();
+
                     }
                 }, new Response.ErrorListener() {
             @Override

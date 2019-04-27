@@ -8,6 +8,9 @@ public class Product {
     private String description;
     private String type_pack;
     private String price;
+    private String about;
+    private String energy_value;
+    private String nutritional_value;
 
     public Product() {
     }
@@ -38,6 +41,18 @@ public class Product {
 
     public String getTypePack() {
         return type_pack;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public String getEnergy_value() {
+        return energy_value;
+    }
+
+    public String getNutritional_value() {
+        return nutritional_value;
     }
 }
 

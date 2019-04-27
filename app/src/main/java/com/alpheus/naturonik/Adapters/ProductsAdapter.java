@@ -66,6 +66,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 intent.putExtra("sorts_name", productList.get(position).getSortName());
                 intent.putExtra("description", productList.get(position).getDescription());
                 intent.putExtra("img", productList.get(position).getImage());
+                intent.putExtra("about", productList.get(position).getAbout());
+                intent.putExtra("energy_value", productList.get(position).getEnergy_value());
+                intent.putExtra("nutritional_value", productList.get(position).getNutritional_value());
 
                 context.startActivity(intent);
             }

@@ -75,9 +75,9 @@
             <TextView
                 android:id="@+id/product_sort"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_weight=".5"
+                android:layout_weight="1"
                 android:text="Сорт" />
 
             <TextView
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_weight="7"
+                android:layout_weight="1"
                 android:text="Орех"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -94,23 +94,67 @@
             <TextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
                 android:layout_weight="1"
                 android:text="0" />
 
+
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:text="erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-erseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrrerseresrksoereosrkoerrrrrrrrrrrrrrrrrrr
-" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:text="Энергетическая ценность:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/energy_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:layout_weight="3" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:text="Пищевая ценность:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/nutritional_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:layout_weight="3" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:text="Описание:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/about"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:layout_marginRight="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:layout_weight="5" />
+
 
         </LinearLayout>
     </ScrollView>
