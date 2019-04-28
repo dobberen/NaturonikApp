@@ -50,7 +50,6 @@ public class Main extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
 
         recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
 
         gridLayoutManager = new GridLayoutManager(getActivity(), calculateNoOfColumns(getActivity()));
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);

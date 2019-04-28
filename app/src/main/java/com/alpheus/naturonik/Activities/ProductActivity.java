@@ -37,6 +37,7 @@ public class ProductActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private String receiverProductID;
+    private String img1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,8 @@ public class ProductActivity extends AppCompatActivity {
                     tv_energy.setText(energy_value);
                     tv_nutritional.setText(nutritional_value);
                     Glide.with(getApplication()).load(img).into(img_id);
+
+                    img1 = img;
                 }
             }
 
@@ -116,7 +119,15 @@ public class ProductActivity extends AppCompatActivity {
 
     public void handleSaveData(View view) {
 
-        Favourite newFavoutire = new Favourite("test1", "ffff1.jpg");
+        Favourite newFavoutire = new Favourite(
+                tv_product_country.getText().toString(),
+                tv_product_sort.getText().toString(),
+                img1,
+                tv_product_description.getText().toString(),
+                tv_price.getText().toString(),
+                tv_about.getText().toString(),
+                tv_energy.getText().toString(),
+                tv_nutritional.getText().toString());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
