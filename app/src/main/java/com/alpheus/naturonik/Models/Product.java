@@ -61,5 +61,41 @@ public class Product {
     public String getNutritional_value() {
         return nutritional_value;
     }
+
+    public void setCountrys_name(String countrys_name) {
+        this.countrys_name = countrys_name;
+    }
+
+    public void setSorts_name(String sorts_name) {
+        this.sorts_name = sorts_name;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setType_pack(String type_pack) {
+        this.type_pack = type_pack;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public void setEnergy_value(String energy_value) {
+        this.energy_value = energy_value;
+    }
+
+    public void setNutritional_value(String nutritional_value) {
+        this.nutritional_value = nutritional_value;
+    }
 }
 

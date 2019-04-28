@@ -36,12 +36,17 @@ public class ProductActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private String receiverProductID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
+
+        receiverProductID = getIntent().getExtras().get("itemPosition").toString();
 
         tv_product_country = findViewById(R.id.product_country);
         tv_product_sort = findViewById(R.id.product_sort);
@@ -52,27 +57,7 @@ public class ProductActivity extends AppCompatActivity {
         tv_nutritional = findViewById(R.id.nutritional_value);
         img_id = findViewById(R.id.product_thumbnail);
 
-        Intent intent = getIntent();
-        String price = intent.getExtras().getString("price");
-        String country_id = intent.getExtras().getString("countrys_name");
-        String sort_id = intent.getExtras().getString("sorts_name");
-        String description = intent.getExtras().getString("description");
-        String about = intent.getExtras().getString("about");
-        String energy_value = intent.getExtras().getString("energy_value");
-        String nutritional_value = intent.getExtras().getString("nutritional_value");
-        String img = intent.getExtras().getString("img");
-
-        tv_product_country.setText(country_id);
-        tv_product_sort.setText(sort_id);
-        tv_product_description.setText(description);
-        tv_price.setText(price);
-        tv_about.setText(about);
-        tv_energy.setText(energy_value);
-        tv_nutritional.setText(nutritional_value);
-
-        Glide.with(getApplication()).load(img).into(img_id);
-        
-        //Toast.makeText(getApplication(),  dataSnapshot.toString(), Toast.LENGTH_LONG).show();
+        retriveProductInfo();
 
         Button backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +75,41 @@ public class ProductActivity extends AppCompatActivity {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
                 handleSaveData(view);
+            }
+        });
+    }
+
+    private void retriveProductInfo() {
+
+        mDatabase.child(receiverProductID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if((dataSnapshot.exists()) && (dataSnapshot.hasChild("img"))){
+
+                    String price = dataSnapshot.child("price").getValue().toString();
+                    String country_id = dataSnapshot.child("countrys_name").getValue().toString();
+                    String sort_id = dataSnapshot.child("sorts_name").getValue().toString();
+                    String description = dataSnapshot.child("description").getValue().toString();
+                    String about = dataSnapshot.child("about").getValue().toString();
+                    String energy_value = dataSnapshot.child("energy_value").getValue().toString();
+                    String nutritional_value = dataSnapshot.child("nutritional_value").getValue().toString();
+                    String img = dataSnapshot.child("img").getValue().toString();
+
+                    tv_product_country.setText(country_id);
+                    tv_product_sort.setText(sort_id);
+                    tv_product_description.setText(description);
+                    tv_price.setText(price);
+                    tv_about.setText(about);
+                    tv_energy.setText(energy_value);
+                    tv_nutritional.setText(nutritional_value);
+                    Glide.with(getApplication()).load(img).into(img_id);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
