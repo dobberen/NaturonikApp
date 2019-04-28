@@ -2,6 +2,7 @@ package com.alpheus.naturonik.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +12,15 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
 import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     private List<Product> productList;
     private List<Product> productListFiltered;
 
+    DatabaseReference reference;
+
     public ProductsAdapter(Context context, List<Product> productList) {
 
         this.context = context;
@@ -38,10 +44,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View itemView = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.product_card_view, parent, false);
 
-        return new MyViewHolder(itemView);
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -50,11 +56,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         final Product product = productListFiltered.get(position);
 
         holder.tv_description.setText(product.getDescription());
-
         Glide.with(context)
-                .load("https://www.naturonik.ru/img/" + product.getImage())
+                .load(product.getImage())
                 .apply(RequestOptions.centerCropTransform())
                 .into(holder.thumbnail);
+
+
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +76,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 intent.putExtra("about", productList.get(position).getAbout());
                 intent.putExtra("energy_value", productList.get(position).getEnergy_value());
                 intent.putExtra("nutritional_value", productList.get(position).getNutritional_value());
+
+
 
                 context.startActivity(intent);
             }
@@ -111,10 +120,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 notifyDataSetChanged();
             }
         };
+
+
     }
 
     //ViewHolder
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_description;
         TextView tv_price;
@@ -123,11 +134,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         ImageView thumbnail;
         CardView cardView;
 
-        public MyViewHolder(View view) {
+        public MyViewHolder(@NonNull View itemView) {
 
-            super(view);
-            tv_description = view.findViewById(R.id.tv_description);
-            thumbnail = view.findViewById(R.id.thumbnail);
+            super(itemView);
+            tv_description = itemView.findViewById(R.id.tv_description);
+            thumbnail = itemView.findViewById(R.id.thumbnail);
             tv_price = itemView.findViewById(R.id.price);
             tv_sort = itemView.findViewById(R.id.product_sort);
             tv_country = itemView.findViewById(R.id.product_country);

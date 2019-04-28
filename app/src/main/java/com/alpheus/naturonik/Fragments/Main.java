@@ -2,44 +2,48 @@ package com.alpheus.naturonik.Fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.alpheus.naturonik.Activities.ProductActivity;
 import com.alpheus.naturonik.Adapters.ProductsAdapter;
-import com.alpheus.naturonik.DB.DBHelper;
 import com.alpheus.naturonik.Models.Product;
-import com.alpheus.naturonik.MyApplication;
 import com.alpheus.naturonik.R;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Fragment {
 
-    private static final String URL = "https://www.naturonik.ru/API/public/getImages";
 
+    private DatabaseReference reference;
     private RecyclerView recyclerView;
     private ProductsAdapter adapter;
     private List<Product> productList;
     private GridLayoutManager gridLayoutManager;
+
 
     public Main() {
     }
@@ -60,12 +64,33 @@ public class Main extends Fragment {
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+
         productList = new ArrayList<>();
 
-        adapter = new ProductsAdapter(getActivity(), productList);
-        recyclerView.setAdapter(adapter);
+        reference = FirebaseDatabase.getInstance().getReference().child("products");
 
-        fetchProducts();
+        reference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Product p = dataSnapshot1.getValue(Product.class);
+                    productList.add(p);
+                }
+
+                adapter = new ProductsAdapter(getActivity(), productList);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Что-то пошло не так", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         return view;
     }
@@ -78,32 +103,6 @@ public class Main extends Fragment {
         return noOfColumns;
     }
 
-    private void fetchProducts() {
-        JsonArrayRequest request = new JsonArrayRequest(URL,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-
-                        List<Product> items = new Gson().fromJson(response.toString(), new TypeToken<List<Product>>() {
-                        }.getType());
-
-                        Log.i("Naturonik", "response:" + response);
-
-                        productList.clear();
-                        productList.addAll(items);
-
-                        adapter.notifyDataSetChanged();
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        MyApplication.getInstance().addToRequestQueue(request);
-    }
 
     //Поиск
 
@@ -138,5 +137,4 @@ public class Main extends Fragment {
             }
         });
     }
-
 }
