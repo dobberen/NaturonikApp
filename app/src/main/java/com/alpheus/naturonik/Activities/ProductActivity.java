@@ -2,6 +2,7 @@ package com.alpheus.naturonik.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,10 +36,13 @@ public class ProductActivity extends AppCompatActivity {
             tv_about, tv_energy, tv_nutritional;
     private ImageView img_id;
 
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase, favDatabase, mTestDB;
     private FirebaseAuth mAuth;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
     private String receiverProductID;
     private String img1;
+    Button fav_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,9 @@ public class ProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
+        favDatabase = FirebaseDatabase.getInstance().getReference().child("favourites");
+        mTestDB = FirebaseDatabase.getInstance().getReference();
+
 
         receiverProductID = getIntent().getExtras().get("itemPosition").toString();
 
@@ -59,6 +67,7 @@ public class ProductActivity extends AppCompatActivity {
         img_id = findViewById(R.id.product_thumbnail);
 
         retriveProductInfo();
+        addToFavourites();
 
         Button backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +84,42 @@ public class ProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                handleSaveData(view);
+                handleSaveDataToFavourites(view);
+
+                favDatabase.child("users").child(user.getUid()).child(receiverProductID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.exists()) {
+
+                            String fav = dataSnapshot.child("isFavourite").getValue().toString();
+
+                            fav_button = (Button) findViewById(R.id.button_favourite);
+
+                            if (fav.equals("1")) {
+
+                                addToFavourites();
+                                Toast.makeText(getApplicationContext(), "Добавлено в избранное",  Toast.LENGTH_SHORT).show();
+
+                            } else if (fav.equals("0")) {
+
+                                deleteFromFavourites();
+                                favDatabase.child("users").child(user.getUid()).child(receiverProductID).setValue(null);
+                                Toast.makeText(getApplicationContext(), "Удалено из избранного",  Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
         });
     }
@@ -86,7 +130,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if((dataSnapshot.exists()) && (dataSnapshot.hasChild("img"))){
+                if ((dataSnapshot.exists())) {
 
                     String price = dataSnapshot.child("price").getValue().toString();
                     String country_id = dataSnapshot.child("countrys_name").getValue().toString();
@@ -96,6 +140,7 @@ public class ProductActivity extends AppCompatActivity {
                     String energy_value = dataSnapshot.child("energy_value").getValue().toString();
                     String nutritional_value = dataSnapshot.child("nutritional_value").getValue().toString();
                     String img = dataSnapshot.child("img").getValue().toString();
+
 
                     tv_product_country.setText(country_id);
                     tv_product_sort.setText(sort_id);
@@ -107,6 +152,7 @@ public class ProductActivity extends AppCompatActivity {
                     Glide.with(getApplication()).load(img).into(img_id);
 
                     img1 = img;
+
                 }
             }
 
@@ -117,7 +163,9 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
-    public void handleSaveData(View view) {
+    public void handleSaveDataToFavourites(View view) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         Favourite newFavoutire = new Favourite(
                 tv_product_country.getText().toString(),
@@ -127,14 +175,89 @@ public class ProductActivity extends AppCompatActivity {
                 tv_price.getText().toString(),
                 tv_about.getText().toString(),
                 tv_energy.getText().toString(),
-                tv_nutritional.getText().toString());
+                tv_nutritional.getText().toString(),
+                "1");
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        String productId = mDatabase.push().getKey();
-
-        mDatabase.child("favourites").child("users").child(user.getUid()).child(productId.toString()).setValue(newFavoutire);
+        mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(newFavoutire);
     }
 
+    public void addToFavourites() {
 
+        favDatabase.child("users").child(user.getUid()).child(receiverProductID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+                    String fav = dataSnapshot.child("isFavourite").getValue().toString();
+
+                    fav_button = (Button) findViewById(R.id.button_favourite);
+
+                    if (fav.equals("1")) {
+
+                        //favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("1");
+
+                        Favourite newFavoutire = new Favourite(
+                                tv_product_country.getText().toString(),
+                                tv_product_sort.getText().toString(),
+                                img1,
+                                tv_product_description.getText().toString(),
+                                tv_price.getText().toString(),
+                                tv_about.getText().toString(),
+                                tv_energy.getText().toString(),
+                                tv_nutritional.getText().toString(),
+                                "1");
+
+                        mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(newFavoutire);
+
+                        fav_button.setBackgroundResource(R.drawable.ic_favorite_product_on);
+
+                        fav_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("0");
+                                fav_button.setBackgroundResource(R.drawable.ic_favorite_product);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void deleteFromFavourites() {
+
+        favDatabase.child("users").child(user.getUid()).child(receiverProductID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String fav = dataSnapshot.child("isFavourite").getValue().toString();
+
+                    fav_button = (Button) findViewById(R.id.button_favourite);
+
+                    if (fav.equals("0")) {
+                        fav_button.setBackgroundResource(R.drawable.ic_favorite_product);
+
+                        fav_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("1");
+                                fav_button.setBackgroundResource(R.drawable.ic_favorite_product_on);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

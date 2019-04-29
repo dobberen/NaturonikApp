@@ -11,11 +11,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
 import com.alpheus.naturonik.Models.Product;
@@ -24,8 +26,12 @@ import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class Main extends Fragment {
 
@@ -43,7 +49,7 @@ public class Main extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         setHasOptionsMenu(true);
 
@@ -62,10 +68,14 @@ public class Main extends Fragment {
         FirebaseRecyclerAdapter<Product, ProductsViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Product, ProductsViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull ProductsViewHolder holder, final int position, @NonNull final Product model) {
+                    protected void onBindViewHolder(@NonNull final ProductsViewHolder holder, final int position, @NonNull final Product model) {
+
 
                         holder.description.setText(model.getDescription());
-                        Glide.with(getActivity()).load(model.getImage()).into(holder.thumbnail);
+                        Picasso.get().load(model.getImage()).into(holder.thumbnail);
+
+                        Log.i("abra", model.getImage());
+                        //Glide.with(getActivity()).load(model.getImage()).into(holder.thumbnail);
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override

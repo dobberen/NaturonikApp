@@ -3,7 +3,7 @@ package com.alpheus.naturonik.Models;
 public class Product {
     private String countrys_name;
     private String sorts_name;
-    private String img;
+    public String img;
     private String description;
     private String type_pack;
     private String price;
@@ -14,7 +14,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(String countrys_name, String sorts_name, String img, String description, String type_pack, String price, String about, String energy_value, String nutritional_value) {
+    public Product(String countrys_name, String sorts_name, String img, String description,
+                   String type_pack, String price, String about, String energy_value,
+                   String nutritional_value) {
         this.countrys_name = countrys_name;
         this.sorts_name = sorts_name;
         this.img = img;
@@ -62,6 +64,7 @@ public class Product {
         return nutritional_value;
     }
 
+
     public void setCountrys_name(String countrys_name) {
         this.countrys_name = countrys_name;
     }
@@ -97,5 +100,6 @@ public class Product {
     public void setNutritional_value(String nutritional_value) {
         this.nutritional_value = nutritional_value;
     }
+
 }
 
