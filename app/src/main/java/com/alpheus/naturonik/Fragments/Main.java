@@ -30,8 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
+
 
 public class Main extends Fragment {
 
@@ -39,6 +38,8 @@ public class Main extends Fragment {
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
+
+    public static final String MY_REQUEST_CODE  = "";
 
 
     public Main() {
@@ -70,12 +71,16 @@ public class Main extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull final ProductsViewHolder holder, final int position, @NonNull final Product model) {
 
+                        try{
+                            holder.description.setText(model.getDescription());
+                            Glide.with(getActivity())
+                                    .load("https://naturonik.ru/img/" + model.getImage())
+                                    .into(holder.thumbnail);
+                        }
+                        catch (Exception e){
+                            Toast.makeText(getActivity(), "Произошла ошибка", Toast.LENGTH_SHORT).show();
+                        }
 
-                        holder.description.setText(model.getDescription());
-                        Picasso.get().load(model.getImage()).into(holder.thumbnail);
-
-                        Log.i("abra", model.getImage());
-                        //Glide.with(getActivity()).load(model.getImage()).into(holder.thumbnail);
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override

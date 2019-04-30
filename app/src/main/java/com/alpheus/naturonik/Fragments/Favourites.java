@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
 import com.alpheus.naturonik.Models.Product;
@@ -64,8 +65,17 @@ public class Favourites extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull Main.ProductsViewHolder holder, final int position, @NonNull final Product model) {
 
-                        holder.description.setText(model.getDescription());
-                        Glide.with(getActivity()).load(model.getImage()).into(holder.thumbnail);
+
+
+                        try{
+                            holder.description.setText(model.getDescription());
+                            Glide.with(getActivity())
+                                    .load("https://naturonik.ru/img/" + model.getImage())
+                                    .into(holder.thumbnail);
+                        }
+                        catch (Exception e){
+                            Toast.makeText(getActivity(), "Произошла ошибка", Toast.LENGTH_SHORT).show();
+                        }
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override

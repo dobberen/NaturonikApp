@@ -1,34 +1,29 @@
 package com.alpheus.naturonik.Activities;
 
-import android.content.Intent;
+
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alpheus.naturonik.Fragments.Main;
 import com.alpheus.naturonik.Models.Favourite;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
+
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -73,8 +68,8 @@ public class ProductActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent backIntent = new Intent(ProductActivity.this, MainActivity.class);
-                startActivity(backIntent);
+
+                finish();
             }
         });
 
@@ -99,13 +94,13 @@ public class ProductActivity extends AppCompatActivity {
                             if (fav.equals("1")) {
 
                                 addToFavourites();
-                                Toast.makeText(getApplicationContext(), "Добавлено в избранное",  Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Добавлено в избранное", Toast.LENGTH_SHORT).show();
 
                             } else if (fav.equals("0")) {
 
                                 deleteFromFavourites();
                                 favDatabase.child("users").child(user.getUid()).child(receiverProductID).setValue(null);
-                                Toast.makeText(getApplicationContext(), "Удалено из избранного",  Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
 
 
                             }
@@ -149,7 +144,7 @@ public class ProductActivity extends AppCompatActivity {
                     tv_about.setText(about);
                     tv_energy.setText(energy_value);
                     tv_nutritional.setText(nutritional_value);
-                    Glide.with(getApplication()).load(img).into(img_id);
+                    Glide.with(getApplication()).load("https://naturonik.ru/img/" + img).into(img_id);
 
                     img1 = img;
 
@@ -193,8 +188,6 @@ public class ProductActivity extends AppCompatActivity {
                     fav_button = (Button) findViewById(R.id.button_favourite);
 
                     if (fav.equals("1")) {
-
-                        //favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("1");
 
                         Favourite newFavoutire = new Favourite(
                                 tv_product_country.getText().toString(),
