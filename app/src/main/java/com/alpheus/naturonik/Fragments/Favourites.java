@@ -60,20 +60,18 @@ public class Favourites extends Fragment {
                 .setQuery(mDatabase, Product.class)
                 .build();
 
-        FirebaseRecyclerAdapter<Product, Main.ProductsViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Product, Main.ProductsViewHolder>(options) {
+        FirebaseRecyclerAdapter<Product, Search.ProductsViewHolder> adapter =
+                new FirebaseRecyclerAdapter<Product, Search.ProductsViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull Main.ProductsViewHolder holder, final int position, @NonNull final Product model) {
+                    protected void onBindViewHolder(@NonNull Search.ProductsViewHolder holder, final int position, @NonNull final Product model) {
 
 
-
-                        try{
+                        try {
                             holder.description.setText(model.getDescription());
                             Glide.with(getActivity())
                                     .load("https://naturonik.ru/img/" + model.getImage())
                                     .into(holder.thumbnail);
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             Toast.makeText(getActivity(), "Произошла ошибка", Toast.LENGTH_SHORT).show();
                         }
 
@@ -95,11 +93,11 @@ public class Favourites extends Fragment {
 
                     @NonNull
                     @Override
-                    public Main.ProductsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                    public Search.ProductsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
                         View view = LayoutInflater.from(viewGroup.getContext())
                                 .inflate(R.layout.product_card_view, viewGroup, false);
-                        Main.ProductsViewHolder viewHolder = new Main.ProductsViewHolder(view);
+                        Search.ProductsViewHolder viewHolder = new Search.ProductsViewHolder(view);
 
                         return viewHolder;
                     }
@@ -120,7 +118,7 @@ public class Favourites extends Fragment {
         return noOfColumns;
     }
 
-    public static class ProductsViewHolder extends RecyclerView.ViewHolder{
+    public static class ProductsViewHolder extends RecyclerView.ViewHolder {
 
         TextView description;
         ImageView thumbnail;

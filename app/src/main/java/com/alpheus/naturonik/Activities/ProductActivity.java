@@ -1,15 +1,20 @@
 package com.alpheus.naturonik.Activities;
 
-
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.alpheus.naturonik.Models.Favourite;
 import com.alpheus.naturonik.R;
@@ -23,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
+import com.rhexgomez.typer.roboto.TyperRoboto;
 
 
 public class ProductActivity extends AppCompatActivity {
@@ -36,14 +42,15 @@ public class ProductActivity extends AppCompatActivity {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private String receiverProductID;
-    private String img1;
-    Button fav_button;
+    private String img1, text;
+    FloatingActionButton fav_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product);
+        setContentView(R.layout.activity_product1);
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
         favDatabase = FirebaseDatabase.getInstance().getReference().child("favourites");
@@ -64,7 +71,33 @@ public class ProductActivity extends AppCompatActivity {
         retriveProductInfo();
         addToFavourites();
 
-        Button backButton = findViewById(R.id.button_back);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+
+            CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+            collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.black));
+            collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.black));
+
+            collapsingToolbarLayout.setCollapsedTitleTypeface(TyperRoboto.ROBOTO_REGULAR());
+            collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_REGULAR());
+
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+    }
+
+
+
+
+        /*Button backButton = findViewById(R.id.button_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,8 +105,8 @@ public class ProductActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        Button favouriteButton = findViewById(R.id.button_favourite);
+*/
+        FloatingActionButton favouriteButton = findViewById(R.id.button_favourite);
         favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +122,7 @@ public class ProductActivity extends AppCompatActivity {
 
                             String fav = dataSnapshot.child("isFavourite").getValue().toString();
 
-                            fav_button = (Button) findViewById(R.id.button_favourite);
+                            fav_button =  findViewById(R.id.button_favourite);
 
                             if (fav.equals("1")) {
 
@@ -101,8 +134,6 @@ public class ProductActivity extends AppCompatActivity {
                                 deleteFromFavourites();
                                 favDatabase.child("users").child(user.getUid()).child(receiverProductID).setValue(null);
                                 Toast.makeText(getApplicationContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
-
-
                             }
 
                         }
@@ -138,7 +169,7 @@ public class ProductActivity extends AppCompatActivity {
 
 
                     tv_product_country.setText(country_id);
-                    tv_product_sort.setText(sort_id);
+                    tv_product_sort.setText("Сорт: " + sort_id);
                     tv_product_description.setText(description);
                     tv_price.setText(price);
                     tv_about.setText(about);
@@ -147,6 +178,8 @@ public class ProductActivity extends AppCompatActivity {
                     Glide.with(getApplication()).load("https://naturonik.ru/img/" + img).into(img_id);
 
                     img1 = img;
+
+                    getSupportActionBar().setTitle(description);
 
                 }
             }
@@ -185,7 +218,7 @@ public class ProductActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     String fav = dataSnapshot.child("isFavourite").getValue().toString();
 
-                    fav_button = (Button) findViewById(R.id.button_favourite);
+                    fav_button = findViewById(R.id.button_favourite);
 
                     if (fav.equals("1")) {
 
@@ -202,13 +235,16 @@ public class ProductActivity extends AppCompatActivity {
 
                         mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(newFavoutire);
 
-                        fav_button.setBackgroundResource(R.drawable.ic_favorite_product_on);
+                        fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
+
 
                         fav_button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("0");
-                                fav_button.setBackgroundResource(R.drawable.ic_favorite_product);
+                                fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
+
+
                             }
                         });
                     }
@@ -230,17 +266,18 @@ public class ProductActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     String fav = dataSnapshot.child("isFavourite").getValue().toString();
 
-                    fav_button = (Button) findViewById(R.id.button_favourite);
+                    fav_button = findViewById(R.id.button_favourite);
 
                     if (fav.equals("0")) {
-                        fav_button.setBackgroundResource(R.drawable.ic_favorite_product);
+                        fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
+
 
                         fav_button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
 
                                 favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("1");
-                                fav_button.setBackgroundResource(R.drawable.ic_favorite_product_on);
+                                fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
                             }
                         });
                     }
