@@ -122,8 +122,6 @@ public class Search extends Fragment {
 
                 String searchText = searchET.getText().toString();
 
-                Log.i("Testing", searchText);
-
                 productSearch(searchText);
             }
         });
@@ -138,8 +136,6 @@ public class Search extends Fragment {
         Toast.makeText(getActivity(), "Поиск начался", Toast.LENGTH_SHORT).show();
 
         Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description").startAt(searchText).endAt(searchText + "\uf8ff");;
-
-        Log.i("Testing", firebaseSearchQuery.toString());
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
                 .setQuery(firebaseSearchQuery, Product.class)

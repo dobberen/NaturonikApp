@@ -10,11 +10,9 @@ public class Favourite {
     public String about;
     public String energy_value;
     public String nutritional_value;
-    public String isFavourite;
 
     public Favourite(String countrys_name, String sorts_name, String img, String description,
-                     String price, String about, String energy_value, String nutritional_value,
-                     String isFavourite) {
+                     String price, String about, String energy_value, String nutritional_value) {
         this.countrys_name = countrys_name;
         this.sorts_name = sorts_name;
         this.img = img;
@@ -23,7 +21,6 @@ public class Favourite {
         this.about = about;
         this.energy_value = energy_value;
         this.nutritional_value = nutritional_value;
-        this.isFavourite = isFavourite;
     }
 
 

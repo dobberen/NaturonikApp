@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
+import com.alpheus.naturonik.Models.Cart;
 import com.alpheus.naturonik.Models.Favourite;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
@@ -37,12 +38,13 @@ public class ProductActivity extends AppCompatActivity {
             tv_about, tv_energy, tv_nutritional;
     private ImageView img_id;
 
-    private DatabaseReference mDatabase, favDatabase, mTestDB;
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private String receiverProductID;
     private String img1, text;
+    Button toCartButton;
     FloatingActionButton fav_button;
 
     @Override
@@ -52,10 +54,7 @@ public class ProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product1);
 
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
-        favDatabase = FirebaseDatabase.getInstance().getReference().child("favourites");
-        mTestDB = FirebaseDatabase.getInstance().getReference();
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         receiverProductID = getIntent().getExtras().get("itemPosition").toString();
 
@@ -69,11 +68,10 @@ public class ProductActivity extends AppCompatActivity {
         img_id = findViewById(R.id.product_thumbnail);
 
         retriveProductInfo();
-        addToFavourites();
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("");
 
@@ -92,67 +90,83 @@ public class ProductActivity extends AppCompatActivity {
                     finish();
                 }
             });
-    }
+        }
 
+        //---------------------------------------Листенер "Закладки"---------------------------------------
 
-
-
-        /*Button backButton = findViewById(R.id.button_back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                finish();
-            }
-        });
-*/
         FloatingActionButton favouriteButton = findViewById(R.id.button_favourite);
         favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                handleSaveDataToFavourites(view);
+                mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                fav_button = findViewById(R.id.button_favourite);
 
-                favDatabase.child("users").child(user.getUid()).child(receiverProductID).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (!dataSnapshot.exists()) {
 
-                        if (dataSnapshot.exists()) {
+                                    handleSaveDataToFavourites(view);
+                                    Toast.makeText(getApplicationContext(), "Добавлено в избранное", Toast.LENGTH_SHORT).show();
 
-                            String fav = dataSnapshot.child("isFavourite").getValue().toString();
+                                } else {
 
-                            fav_button =  findViewById(R.id.button_favourite);
-
-                            if (fav.equals("1")) {
-
-                                addToFavourites();
-                                Toast.makeText(getApplicationContext(), "Добавлено в избранное", Toast.LENGTH_SHORT).show();
-
-                            } else if (fav.equals("0")) {
-
-                                deleteFromFavourites();
-                                favDatabase.child("users").child(user.getUid()).child(receiverProductID).setValue(null);
-                                Toast.makeText(getApplicationContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
+                                    mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(null);
+                                    Toast.makeText(getApplicationContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
-                        }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                            }
+                        });
 
             }
         });
+
+        //---------------------------------------Листенер "Корзина"---------------------------------------
+
+        toCartButton = findViewById(R.id.to_cart_btn);
+        toCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+
+                mDatabase.child("cart").child("users").child(user.getUid()).child(receiverProductID)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if (!dataSnapshot.exists()) {
+
+                                    handleSaveDataToCart(view);
+                                    Toast.makeText(getApplicationContext(), "Добавлено в корзину", Toast.LENGTH_SHORT).show();
+                                } else {
+
+                                    mDatabase.child("cart").child("users").child(user.getUid()).child(receiverProductID).setValue(null);
+                                    Toast.makeText(getApplicationContext(), "Удалено из корзины", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+
+        });
     }
+
+    //---------------------------------------Получение данных из таблицы "Продукты"---------------------------------------
 
     private void retriveProductInfo() {
 
-        mDatabase.child(receiverProductID).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("products").child(receiverProductID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -180,7 +194,6 @@ public class ProductActivity extends AppCompatActivity {
                     img1 = img;
 
                     getSupportActionBar().setTitle(description);
-
                 }
             }
 
@@ -189,8 +202,48 @@ public class ProductActivity extends AppCompatActivity {
 
             }
         });
+
+        mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        fav_button = findViewById(R.id.button_favourite);
+
+                        if (dataSnapshot.exists()) {
+                            fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
+                        } else {
+                            fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+        mDatabase.child("cart").child("users").child(user.getUid()).child(receiverProductID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.exists()) {
+                            toCartButton.setText("Удалить из корзины");
+                        } else {
+                            toCartButton.setText("Добавить в корзину");
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
+    //---------------------------------------Добавление данных в таблицу "Закладки"---------------------------------------
     public void handleSaveDataToFavourites(View view) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -203,91 +256,29 @@ public class ProductActivity extends AppCompatActivity {
                 tv_price.getText().toString(),
                 tv_about.getText().toString(),
                 tv_energy.getText().toString(),
-                tv_nutritional.getText().toString(),
-                "1");
+                tv_nutritional.getText().toString());
 
         mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(newFavoutire);
+
+
     }
 
-    public void addToFavourites() {
 
-        favDatabase.child("users").child(user.getUid()).child(receiverProductID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    //---------------------------------------Добавление данных в таблицу "Корзина"---------------------------------------
 
-                if (dataSnapshot.exists()) {
-                    String fav = dataSnapshot.child("isFavourite").getValue().toString();
+    public void handleSaveDataToCart(View view) {
 
-                    fav_button = findViewById(R.id.button_favourite);
+        Cart cart = new Cart(
+                img1,
+                tv_product_description.getText().toString(),
+                tv_price.getText().toString(),
+                "1",
+                tv_energy.getText().toString(),
+                tv_nutritional.getText().toString());
 
-                    if (fav.equals("1")) {
-
-                        Favourite newFavoutire = new Favourite(
-                                tv_product_country.getText().toString(),
-                                tv_product_sort.getText().toString(),
-                                img1,
-                                tv_product_description.getText().toString(),
-                                tv_price.getText().toString(),
-                                tv_about.getText().toString(),
-                                tv_energy.getText().toString(),
-                                tv_nutritional.getText().toString(),
-                                "1");
-
-                        mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(newFavoutire);
-
-                        fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
-
-
-                        fav_button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("0");
-                                fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
-
-
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        mDatabase.child("cart").child("users").child(user.getUid()).child(receiverProductID).setValue(cart);
     }
 
-    public void deleteFromFavourites() {
-
-        favDatabase.child("users").child(user.getUid()).child(receiverProductID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String fav = dataSnapshot.child("isFavourite").getValue().toString();
-
-                    fav_button = findViewById(R.id.button_favourite);
-
-                    if (fav.equals("0")) {
-                        fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
-
-
-                        fav_button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                favDatabase.child("users").child(user.getUid()).child(receiverProductID).child("isFavourite").setValue("1");
-                                fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 }
+
+
