@@ -9,9 +9,12 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,12 +27,19 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class Search extends Fragment {
 
     private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseSearch;
+
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
+
+    private EditText searchET;
+    private ImageButton searchIB;
+
 
     public Search() {
 
@@ -43,8 +53,13 @@ public class Search extends Fragment {
         setHasOptionsMenu(true);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
+        mDatabaseSearch = FirebaseDatabase.getInstance().getReference("products");
+
+        searchET = view.findViewById(R.id.search_et);
+        searchIB = view.findViewById(R.id.search_ib);
 
         recyclerView = view.findViewById(R.id.recycler_view);
+
 
         gridLayoutManager = new GridLayoutManager(getActivity(), calculateNoOfColumns(getActivity()));
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
@@ -101,8 +116,60 @@ public class Search extends Fragment {
 
         adapter.startListening();
 
+        searchIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String searchText = searchET.getText().toString();
+
+                Log.i("Testing", searchText);
+
+                productSearch(searchText);
+            }
+        });
+
         return view;
     }
+
+    //-------------------------Поиск-------------------------
+
+    private void productSearch(String searchText) {
+
+        Toast.makeText(getActivity(), "Поиск начался", Toast.LENGTH_SHORT).show();
+
+        Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description").startAt(searchText).endAt(searchText + "\uf8ff");;
+
+        Log.i("Testing", firebaseSearchQuery.toString());
+
+        FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
+                .setQuery(firebaseSearchQuery, Product.class)
+                .setLifecycleOwner(this)
+                .build();
+
+        FirebaseRecyclerAdapter<Product, ProductsViewHolder> searchRecyclerAdapter = new FirebaseRecyclerAdapter<Product, ProductsViewHolder>(options) {
+
+            @Override
+            protected void onBindViewHolder(@NonNull ProductsViewHolder holder, int position, @NonNull Product model) {
+
+                holder.setDescription(model.getDescription());
+                holder.setThumbnail(getContext(),model.getImage());
+            }
+
+            @NonNull
+            @Override
+            public ProductsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
+                View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.product_card_view, viewGroup, false);
+                return new ProductsViewHolder(mView);
+            }
+        };
+
+        recyclerView.setAdapter(searchRecyclerAdapter);
+
+        searchRecyclerAdapter.startListening();
+    }
+
+    //-------------------------Подсчет строк для отображения-------------------------
 
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -118,6 +185,7 @@ public class Search extends Fragment {
         TextView description;
         ImageView thumbnail;
         CardView cardView;
+        View mView;
 
         public ProductsViewHolder(@NonNull View itemView) {
 
@@ -126,6 +194,26 @@ public class Search extends Fragment {
             description = itemView.findViewById(R.id.tv_description);
             thumbnail = itemView.findViewById(R.id.thumbnail);
             cardView = itemView.findViewById(R.id.cardview_id);
+
+            mView = itemView;
+        }
+
+        public void setDescription(String product_description) {
+            description.setText(product_description);
+        }
+
+        public void setThumbnail(Context context, String product_thumbnail) {
+
+            Glide.with(context).load("https://naturonik.ru/img/" + product_thumbnail).into(thumbnail);
+        }
+
+        public void setDetails(Context context, String description, String thumbnail){
+
+            TextView product_description = (TextView) mView.findViewById(R.id.tv_description);
+            ImageView product_thumbnail = (ImageView) mView.findViewById(R.id.thumbnail);
+
+            product_description.setText(description);
+            Glide.with(context).load(thumbnail).into(product_thumbnail);
         }
     }
 }

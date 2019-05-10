@@ -3,15 +3,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginRight="8dp"
     tools:context=".Fragments.Search">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content">
+
+
+        <EditText
+            android:id="@+id/search_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/search_layout"
+            android:ems="14"
+            android:hint="@string/action_search"
+            android:inputType="textCapWords"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="4dp"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/search_ib"
+            android:layout_marginTop="10dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignBottom="@+id/search_et"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="60dp"
+            android:background="@color/white"
+            app:srcCompat="@mipmap/ic_search" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_et"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="12dp"
+            android:scrollbars="vertical" />
+
+    </RelativeLayout>
+
 
 </FrameLayout>
