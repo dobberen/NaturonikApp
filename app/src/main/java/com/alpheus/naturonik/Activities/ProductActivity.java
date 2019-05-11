@@ -1,5 +1,6 @@
 package com.alpheus.naturonik.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 
@@ -8,10 +9,16 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
@@ -39,20 +46,21 @@ public class ProductActivity extends AppCompatActivity {
     private ImageView img_id;
 
     private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private String receiverProductID;
-    private String img1, text;
-    Button toCartButton;
-    FloatingActionButton fav_button;
+    private String img1;
+    private String amount = "1";
+    private Integer resultPrice;
+    private Button toCartButton;
+    private FloatingActionButton fav_button;
+    private TextView resultPrice_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product1);
-
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -67,7 +75,11 @@ public class ProductActivity extends AppCompatActivity {
         tv_nutritional = findViewById(R.id.nutritional_value);
         img_id = findViewById(R.id.product_thumbnail);
 
+        resultPrice_tv = (TextView) findViewById(R.id.product_summ_tv);
+
         retriveProductInfo();
+
+        //---------------------------------------Toolbar---------------------------------------
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -160,6 +172,68 @@ public class ProductActivity extends AppCompatActivity {
             }
 
         });
+
+        //---------------------------------------Спиннеры---------------------------------------
+
+        Integer[] data = {100, 250, 500, 1000};
+        Integer[] amountData = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        ArrayAdapter<Integer> spinnerAdapter =
+                new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, data);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter<Integer> spinnerAdapter1 =
+                new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, amountData);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final Spinner spinner1 = (Spinner) findViewById(R.id.amount_spinner);
+        spinner.setAdapter(spinnerAdapter);
+        spinner1.setAdapter(spinnerAdapter1);
+
+        spinner.setPrompt("Фасовка:");
+        spinner.setSelection(1);
+        spinner1.setPrompt("Количество:");
+        spinner1.setSelection(0);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Integer weight = Integer.parseInt(spinner.getSelectedItem().toString());
+                Integer amount = Integer.parseInt(spinner1.getSelectedItem().toString());
+                Integer productPrice = Integer.parseInt(tv_price.getText().toString());
+
+                resultPrice = (productPrice / (1000/ weight) * amount);
+
+                resultPrice_tv.setText("Итого: " + resultPrice.toString() + " \u20BD");
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Integer weight = Integer.parseInt(spinner.getSelectedItem().toString());
+                Integer amount = Integer.parseInt(spinner1.getSelectedItem().toString());
+                Integer productPrice = Integer.parseInt(tv_price.getText().toString());
+
+                resultPrice = (productPrice / (1000/ weight) * amount);
+
+                resultPrice_tv.setText("Итого: " + resultPrice.toString() + " \u20BD");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
     //---------------------------------------Получение данных из таблицы "Продукты"---------------------------------------

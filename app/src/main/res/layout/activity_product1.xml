@@ -81,7 +81,61 @@
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    tools:text="0 Р/кг" />
+                    tools:text="380 Р/кг" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Фасовка (граммы):"></TextView>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Количество:" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="8dp"></Spinner>
+
+                    <Spinner
+                        android:id="@+id/amount_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="8dp"></Spinner>
+                </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/product_summ_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Итого: "
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+
 
                 <TextView
                     android:id="@+id/product_sort"
@@ -189,5 +243,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
-        android:text="Добавить в корзину"/>
+        android:text="Добавить в корзину" />
 </android.support.design.widget.CoordinatorLayout>

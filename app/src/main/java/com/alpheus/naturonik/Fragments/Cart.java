@@ -11,7 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +28,22 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Cart extends Fragment {
 
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
+
+    private ProgressBar progressBar;
+    private LinearLayout placeholder;
+
+    private ScrollView scrollView;
+    private Button buyBtn, btnToShop;
 
     public Cart() {
 
@@ -41,6 +55,14 @@ public class Cart extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_cart, container, false);
         setHasOptionsMenu(true);
+
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        placeholder = (LinearLayout) view.findViewById(R.id.placeholder_ll_cart);
+
+        scrollView = (ScrollView) view.findViewById(R.id.cart_scrollview);
+        buyBtn = (Button) view.findViewById(R.id.buy_btn);
+
+        btnToShop = (Button) view.findViewById(R.id.btn_to_shop);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -55,8 +77,8 @@ public class Cart extends Fragment {
 
         FirebaseRecyclerOptions<com.alpheus.naturonik.Models.Cart> options =
                 new FirebaseRecyclerOptions.Builder<com.alpheus.naturonik.Models.Cart>()
-                .setQuery(mDatabase, com.alpheus.naturonik.Models.Cart.class)
-                .build();
+                        .setQuery(mDatabase, com.alpheus.naturonik.Models.Cart.class)
+                        .build();
 
         FirebaseRecyclerAdapter<com.alpheus.naturonik.Models.Cart, ProductsViewHolder> adapter =
                 new FirebaseRecyclerAdapter<com.alpheus.naturonik.Models.Cart, ProductsViewHolder>(options) {
@@ -106,7 +128,46 @@ public class Cart extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                if(!dataSnapshot.exists()){
+
+                    scrollView.setVisibility(View.GONE);
+                    buyBtn.setVisibility(View.GONE);
+                    placeholder.setVisibility(View.VISIBLE);
+                }
+
+                if(dataSnapshot.exists()){
+
+                    scrollView.setVisibility(View.VISIBLE);
+                    buyBtn.setVisibility(View.VISIBLE);
+                    placeholder.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         adapter.startListening();
+
+        btnToShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new Search();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+            }
+        });
 
         return view;
     }

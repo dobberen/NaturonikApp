@@ -13,7 +13,10 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,14 +28,21 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Favourites extends Fragment {
 
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
+
+    private ProgressBar progressBar;
+    private LinearLayout placeholder;
+    private Button btnToShop;
 
     public Favourites() {
     }
@@ -44,6 +54,10 @@ public class Favourites extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
         setHasOptionsMenu(true);
+
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        placeholder = (LinearLayout) view.findViewById(R.id.placeholder_ll_fav);
+        btnToShop = (Button) view.findViewById(R.id.btn_to_shop);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -105,7 +119,43 @@ public class Favourites extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+
+
+                }
+
+                if(!dataSnapshot.exists()){
+                    placeholder.setVisibility(View.VISIBLE);
+                }
+
+                if(dataSnapshot.exists()){
+                    placeholder.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         adapter.startListening();
+
+        btnToShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new Search();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+            }
+        });
 
         return view;
     }

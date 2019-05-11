@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +27,12 @@ import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class Search extends Fragment {
 
@@ -40,6 +45,7 @@ public class Search extends Fragment {
     private EditText searchET;
     private ImageButton searchIB;
 
+    private ProgressBar progressBar;
 
     public Search() {
 
@@ -52,6 +58,8 @@ public class Search extends Fragment {
 
         setHasOptionsMenu(true);
 
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
         mDatabaseSearch = FirebaseDatabase.getInstance().getReference("products");
 
@@ -60,10 +68,10 @@ public class Search extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
 
-
         gridLayoutManager = new GridLayoutManager(getActivity(), calculateNoOfColumns(getActivity()));
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
+
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
                 .setQuery(mDatabase, Product.class)
@@ -114,6 +122,21 @@ public class Search extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         adapter.startListening();
 
         searchIB.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +158,8 @@ public class Search extends Fragment {
 
         Toast.makeText(getActivity(), "Поиск начался", Toast.LENGTH_SHORT).show();
 
-        Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description").startAt(searchText).endAt(searchText + "\uf8ff");;
+        Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description").startAt(searchText).endAt(searchText + "\uf8ff");
+        ;
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
                 .setQuery(firebaseSearchQuery, Product.class)
@@ -148,7 +172,7 @@ public class Search extends Fragment {
             protected void onBindViewHolder(@NonNull ProductsViewHolder holder, int position, @NonNull Product model) {
 
                 holder.setDescription(model.getDescription());
-                holder.setThumbnail(getContext(),model.getImage());
+                holder.setThumbnail(getContext(), model.getImage());
             }
 
             @NonNull
@@ -203,13 +227,5 @@ public class Search extends Fragment {
             Glide.with(context).load("https://naturonik.ru/img/" + product_thumbnail).into(thumbnail);
         }
 
-        public void setDetails(Context context, String description, String thumbnail){
-
-            TextView product_description = (TextView) mView.findViewById(R.id.tv_description);
-            ImageView product_thumbnail = (ImageView) mView.findViewById(R.id.thumbnail);
-
-            product_description.setText(description);
-            Glide.with(context).load(thumbnail).into(product_thumbnail);
-        }
     }
 }

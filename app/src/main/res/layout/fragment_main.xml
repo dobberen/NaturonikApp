@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Main">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -173,25 +172,24 @@
                 android:layout_margin="4dp"
                 android:orientation="horizontal"
                 android:padding="4dp"
+                android:weightSum="2"
                 app:layout_constraintTop_toBottomOf="@id/contacts_tv"
-                tools:layout_editor_absoluteX="4dp"
-                android:weightSum="2">
+                tools:layout_editor_absoluteX="4dp">
 
 
                 <ImageView
                     android:id="@+id/contacts_email_iv"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:id="@+id/contacts_whatsup_iv"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                     />
+                    android:layout_weight="1" />
 
 
             </LinearLayout>
