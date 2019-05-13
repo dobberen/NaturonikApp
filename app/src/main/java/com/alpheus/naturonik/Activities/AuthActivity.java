@@ -39,13 +39,20 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                    startActivity(intent);
+                    if (user.getUid().equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") ) {
+                        Toast.makeText(AuthActivity.this, "Админ, здарова", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(AuthActivity.this, AdminActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
 
                 } else {
                     // User is signed out
-
                 }
+
 
             }
         };
@@ -97,18 +104,18 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        /*if(ETemail.getText().toString().trim().length()==0 && ETpassword.getText().toString().trim().length()==0){
-            btn_sign_in.setEnabled(false);
-            btn_registration.setEnabled(false);
-        } else {
-            btn_sign_in.setEnabled(true);
-            btn_registration.setEnabled(true);
-        }*/
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-            startActivity(intent);
+
+            if (user.getUid().equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") ) {
+                Toast.makeText(AuthActivity.this, "Админ, здарова", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AuthActivity.this, AdminActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
@@ -123,19 +130,39 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void signin(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(AuthActivity.this, "Aвторизация успешна", Toast.LENGTH_SHORT).show();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-                    Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                    startActivity(intent);
-                } else
-                    Toast.makeText(AuthActivity.this, "Aвторизация провалена", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-            }
-        });
+                        String user = mAuth.getUid();
+
+                        if (mAuth.getUid() == null){
+                            user = "4GCDV8FyQfbnMLngj5jnYGxf8Md2";
+                        }
+
+                        if(user.equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") && task.isSuccessful() ){
+
+                            Toast.makeText(AuthActivity.this, "Админ, здарова", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(AuthActivity.this, AdminActivity.class);
+                            startActivity(intent);
+
+                        }
+
+                        else if(task.isSuccessful()) {
+                            Toast.makeText(AuthActivity.this, "Aвторизация успешна", Toast.LENGTH_SHORT).show();
+
+
+                            Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+                            startActivity(intent);
+
+                        } else {
+                            Toast.makeText(AuthActivity.this, "Aвторизация провалена", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
     }
 
     public void registration(String email, String password) {
@@ -153,9 +180,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private  void checkFieldsForEmptyValues(){
-
-
+    private void checkFieldsForEmptyValues() {
 
         String s1 = ETemail.getText().toString();
         String s2 = ETpassword.getText().toString();

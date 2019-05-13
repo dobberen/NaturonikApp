@@ -1,17 +1,17 @@
-package com.alpheus.naturonik.Fragments;
+package com.alpheus.naturonik.AdminFragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
+import com.alpheus.naturonik.Activities.AddProductActivity;
 import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
@@ -109,6 +110,16 @@ public class Search extends Fragment {
                                 startActivity(intent);
                             }
                         });
+
+                        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View view) {
+
+                                Toast.makeText(getActivity(), "Тест", Toast.LENGTH_SHORT).show();
+
+                                return true;
+                            }
+                        });
                     }
 
                     @NonNull
@@ -162,6 +173,7 @@ public class Search extends Fragment {
         Toast.makeText(getActivity(), "Поиск начался", Toast.LENGTH_SHORT).show();
 
         Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description").startAt(searchText).endAt(searchText + "\uf8ff");
+        ;
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
                 .setQuery(firebaseSearchQuery, Product.class)
@@ -244,5 +256,26 @@ public class Search extends Fragment {
             Glide.with(context).load("https://naturonik.ru/img/" + product_thumbnail).into(thumbnail);
         }
 
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_add);
+        MenuItem item1 = menu.findItem(R.id.action_search);
+        if (item != null || item1 != null )
+            item.setVisible(false);
+            item1.setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.action_search:
+                Intent intent = new Intent(getActivity(), AddProductActivity.class);
+                startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

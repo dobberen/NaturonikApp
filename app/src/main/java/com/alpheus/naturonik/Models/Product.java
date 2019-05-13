@@ -5,7 +5,6 @@ public class Product {
     private String sorts_name;
     public String img;
     private String description;
-    private String type_pack;
     private String price;
     private String about;
     private String energy_value;
@@ -15,13 +14,11 @@ public class Product {
     }
 
     public Product(String countrys_name, String sorts_name, String img, String description,
-                   String type_pack, String price, String about, String energy_value,
-                   String nutritional_value) {
+                   String price, String about, String energy_value, String nutritional_value) {
         this.countrys_name = countrys_name;
         this.sorts_name = sorts_name;
         this.img = img;
         this.description = description;
-        this.type_pack = type_pack;
         this.price = price;
         this.about = about;
         this.energy_value = energy_value;
@@ -32,7 +29,7 @@ public class Product {
         return description;
     }
 
-    public String getImage() {
+    public String getImg() {
         return img;
     }
 
@@ -40,16 +37,12 @@ public class Product {
         return price;
     }
 
-    public String getCountryName() {
+    public String getCountrys_name() {
         return countrys_name;
     }
 
-    public String getSortName() {
+    public String getSorts_name() {
         return sorts_name;
-    }
-
-    public String getTypePack() {
-        return type_pack;
     }
 
     public String getAbout() {
@@ -79,10 +72,6 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setType_pack(String type_pack) {
-        this.type_pack = type_pack;
     }
 
     public void setPrice(String price) {

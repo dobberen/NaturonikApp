@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".Activities.AddProductActivity">
+
+    <Button
+        android:id="@+id/button_choose_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выберите файл" />
+
+    <EditText
+        android:id="@+id/et_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/button_choose_image"
+        android:hint="Наименование"
+        android:inputType="textCapSentences" />
+
+    <EditText
+        android:id="@+id/et_about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_description"
+        android:layout_marginStart="16dp"
+        android:hint="Описание"
+        android:inputType="textCapSentences" />
+
+    <EditText
+        android:id="@+id/et_country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_about"
+        android:layout_marginStart="16dp"
+        android:hint="Страна"
+        android:inputType="textCapSentences" />
+
+    <EditText
+        android:id="@+id/et_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_country"
+        android:layout_marginStart="16dp"
+        android:hint="Сорт"
+        android:inputType="textCapSentences" />
+
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_sort"
+        android:layout_marginStart="16dp"
+        android:hint="Цена/кг"
+        android:inputType="number" />
+
+    <LinearLayout
+        android:id="@+id/ll_energy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/et_price"
+        android:weightSum="2">
+
+        <EditText
+            android:id="@+id/et_energy1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_energy"
+            android:layout_marginStart="16dp"
+            android:hint="Ккал"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/et_energy2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_energy"
+            android:layout_marginStart="16dp"
+            android:hint="Кдж"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_nutritional"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/ll_energy"
+        android:weightSum="3">
+
+
+        <EditText
+            android:id="@+id/et_nutritional1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_energy"
+            android:layout_marginStart="16dp"
+            android:hint="Белки"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/et_nutritional2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_energy"
+            android:layout_marginStart="16dp"
+            android:hint="Жиры"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/et_nutritional3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_energy"
+            android:layout_marginStart="16dp"
+            android:hint="Углеводы"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/progress_bar"
+        android:layout_below="@id/ll_nutritional"
+        android:layout_marginTop="16dp" />
+
+
+    <View
+        android:layout_above="@+id/button_upload"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/button_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Загрузить" />
+
+    <TextView
+        android:id="@+id/text_view_show_uploads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button_upload"
+        android:layout_alignBottom="@+id/button_upload"
+        android:layout_marginStart="25dp"
+        android:layout_toEndOf="@+id/button_upload"
+        android:gravity="center"
+        android:text="Показать товары"
+        android:textSize="16sp" />
+
+</RelativeLayout>

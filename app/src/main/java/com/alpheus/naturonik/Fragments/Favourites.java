@@ -83,7 +83,7 @@ public class Favourites extends Fragment {
                         try {
                             holder.description.setText(model.getDescription());
                             Glide.with(getActivity())
-                                    .load("https://naturonik.ru/img/" + model.getImage())
+                                    .load("https://naturonik.ru/img/" + model.getImg())
                                     .into(holder.thumbnail);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Произошла ошибка", Toast.LENGTH_SHORT).show();
