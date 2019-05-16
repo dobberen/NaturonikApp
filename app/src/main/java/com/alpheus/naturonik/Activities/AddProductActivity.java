@@ -70,7 +70,7 @@ public class AddProductActivity extends AppCompatActivity {
         tvShowUploads = findViewById(R.id.text_view_show_uploads);
         imageView = findViewById(R.id.image_view);
 
-        mStorage = FirebaseStorage.getInstance().getReference("uploads");
+        mStorage = FirebaseStorage.getInstance().getReference();
         mData = FirebaseDatabase.getInstance().getReference("products");
 
         buttonChooseImage.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +97,18 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(AddProductActivity.this, MainActivity.class);
+                Intent intent = new Intent(AddProductActivity.this, AdminActivity.class);
                 startActivity(intent);
             }
         });
 
 
+    }
+
+    private String getFileExtension(Uri uri){
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private void openFileChooser() {
@@ -128,6 +134,10 @@ public class AddProductActivity extends AppCompatActivity {
 
     private void uploadFile() {
 
+        final String productId = mData.push().getKey();
+
+        final StorageReference imageRef = mStorage.child("images/" + productId);
+
         if (imageUri != null && etDescription.getText().length() != 0
                 && etAbout.getText().length() != 0 && etCountry.getText().length() != 0
                 && etSort.getText().length() != 0 && etPrice.getText().length() != 0
@@ -135,7 +145,7 @@ public class AddProductActivity extends AppCompatActivity {
                 && etNutritional1.getText().length() != 0 && etNutritional2.getText().length() != 0
                 && etNutritional3.getText().length() != 0)
         {
-            mStorage.putFile(imageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>()
+            imageRef.putFile(imageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>()
             {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception
@@ -144,7 +154,7 @@ public class AddProductActivity extends AppCompatActivity {
                     {
                         throw task.getException();
                     }
-                    return mStorage.getDownloadUrl();
+                    return imageRef.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>()
             {
@@ -172,7 +182,7 @@ public class AddProductActivity extends AppCompatActivity {
                             energy,
                             nutritional);
 
-                        mData.push().setValue(product);
+                        mData.child(productId).setValue(product);
 
                         Toast.makeText(AddProductActivity.this, "Загрузка успешна", Toast.LENGTH_LONG).show();
                     } else

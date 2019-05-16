@@ -131,7 +131,7 @@ public class Main extends Fragment
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_add);
-        MenuItem item1 = menu.findItem(R.id.action_search);
+        MenuItem item1 = menu.findItem(R.id.action_add_product);
         if (item != null || item1 != null)
             item.setVisible(true);
             item1.setVisible(false);

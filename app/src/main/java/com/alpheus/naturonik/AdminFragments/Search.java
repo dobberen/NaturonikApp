@@ -1,6 +1,9 @@
 package com.alpheus.naturonik.AdminFragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,20 +12,24 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
 import com.alpheus.naturonik.Activities.AddProductActivity;
+import com.alpheus.naturonik.Activities.UpdateProductActivity;
 import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
@@ -34,11 +41,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class Search extends Fragment {
 
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseSearch;
+
+    private FirebaseStorage mStorage;
 
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
@@ -48,18 +59,22 @@ public class Search extends Fragment {
 
     private ProgressBar progressBar;
 
+    private AlertDialog alertDialog;
+
     public Search() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         setHasOptionsMenu(true);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
+        mStorage = FirebaseStorage.getInstance();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("products");
         mDatabaseSearch = FirebaseDatabase.getInstance().getReference("products");
@@ -72,7 +87,6 @@ public class Search extends Fragment {
         gridLayoutManager = new GridLayoutManager(getActivity(), calculateNoOfColumns(getActivity()));
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
-
 
         Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description");
 
@@ -111,15 +125,40 @@ public class Search extends Fragment {
                             }
                         });
 
+
                         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View view) {
 
-                                Toast.makeText(getActivity(), "Тест", Toast.LENGTH_SHORT).show();
+                                final CharSequence[] items = {"Изменить", "Отмена"};
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                                builder.setTitle("Выберите действие:");
+                                builder.setItems(items, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        if (items[item].equals("Изменить")) {
+
+                                            String itemPosition = getRef(position).getKey();
+
+                                            Intent intent = new Intent(getActivity(), UpdateProductActivity.class);
+
+                                            intent.putExtra("itemPosition", itemPosition);
+
+                                            startActivity(intent);
+                                        } else if (items[item].equals("Отмена")) {
+
+                                            dialog.dismiss();
+                                        }
+                                    }
+                                });
+                                builder.show();
 
                                 return true;
                             }
                         });
+
                     }
 
                     @NonNull
@@ -166,7 +205,7 @@ public class Search extends Fragment {
         return view;
     }
 
-    //-------------------------Поиск-------------------------
+    //-------------------------Поиск-------------------------------------------------
 
     private void productSearch(String searchText) {
 
@@ -202,6 +241,39 @@ public class Search extends Fragment {
                         startActivity(intent);
                     }
                 });
+
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+
+                        final CharSequence[] items = {"Изменить", "Отмена"};
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                        builder.setTitle("Выберите действие:");
+                        builder.setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int item) {
+                                if (items[item].equals("Изменить")) {
+
+                                    String itemPosition = getRef(position).getKey();
+
+                                    Intent intent = new Intent(getActivity(), UpdateProductActivity.class);
+
+                                    intent.putExtra("itemPosition", itemPosition);
+
+                                    startActivity(intent);
+                                } else if (items[item].equals("Отмена")) {
+
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+                        builder.show();
+
+                        return true;
+                    }
+                });
             }
 
             @NonNull
@@ -228,6 +300,7 @@ public class Search extends Fragment {
         return noOfColumns;
     }
 
+    //-------------------------ViewHolder-------------------------
 
     public static class ProductsViewHolder extends RecyclerView.ViewHolder {
 
@@ -253,7 +326,7 @@ public class Search extends Fragment {
 
         public void setThumbnail(Context context, String product_thumbnail) {
 
-            Glide.with(context).load("https://naturonik.ru/img/" + product_thumbnail).into(thumbnail);
+            Glide.with(context).load(product_thumbnail).into(thumbnail);
         }
 
     }
@@ -261,21 +334,24 @@ public class Search extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_add);
-        MenuItem item1 = menu.findItem(R.id.action_search);
-        if (item != null || item1 != null )
+        MenuItem item1 = menu.findItem(R.id.action_add_product);
+        if (item != null || item1 != null)
             item.setVisible(false);
-            item1.setVisible(true);
+        item1.setVisible(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
-            case R.id.action_search:
+        switch (item.getItemId()) {
+            case R.id.action_add_product:
+
                 Intent intent = new Intent(getActivity(), AddProductActivity.class);
                 startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }
+

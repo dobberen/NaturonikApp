@@ -1,30 +1,40 @@
 package com.alpheus.naturonik.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
+public class AuthActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser user;
 
-    private EditText ETemail, ETpassword;
-    private Button btn_sign_in, btn_registration;
+    private EditText ETemail, ETpassword, ETpasswordRepeat;
+    private Button btn_login;
+    private TextView linkRegistration, linkForgetPass;
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +49,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    if (user.getUid().equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") ) {
+                    if (user.getUid().equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2")) {
                         Toast.makeText(AuthActivity.this, "Админ, здарова", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AuthActivity.this, AdminActivity.class);
                         startActivity(intent);
@@ -48,85 +58,87 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(intent);
                     }
 
-
                 } else {
                     // User is signed out
                 }
-
-
             }
         };
 
         ETemail = (EditText) findViewById(R.id.et_email);
         ETpassword = (EditText) findViewById(R.id.et_password);
 
-        btn_sign_in = findViewById(R.id.btn_sign_in);
-        btn_registration = findViewById(R.id.btn_registration);
+        linkRegistration = findViewById(R.id.link_registration);
+        linkForgetPass = findViewById(R.id.link_forget_pass);
+        btn_login = findViewById(R.id.btn_login);
 
-        findViewById(R.id.btn_sign_in).setOnClickListener(this);
-        findViewById(R.id.btn_registration).setOnClickListener(this);
+        final LinearLayout sv = findViewById(R.id.ll_auth);
 
-        btn_sign_in.setEnabled(false);
-        btn_registration.setEnabled(false);
-
-
-        ETemail.addTextChangedListener(new TextWatcher() {
+        btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkFieldsForEmptyValues();
-            }
+            public void onClick(View view) {
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkFieldsForEmptyValues();
-            }
+                progressBar = new ProgressBar(AuthActivity.this, null, android.R.attr.progressBarStyleLarge);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(100, 100);
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                checkFieldsForEmptyValues();
+                sv.setGravity(Gravity.CENTER);
+                sv.addView(progressBar, params);
+                progressBar.setVisibility(View.VISIBLE);
+
+                signin(ETemail.getText().toString(), ETpassword.getText().toString());
             }
         });
 
-        ETpassword.addTextChangedListener(new TextWatcher() {
+        linkRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkFieldsForEmptyValues();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkFieldsForEmptyValues();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                checkFieldsForEmptyValues();
+            public void onClick(View view) {
+                Intent intent = new Intent(AuthActivity.this, RegistrationActivity.class);
+                startActivity(intent);
             }
         });
 
+        linkForgetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
+                if (ETemail.getText().toString().isEmpty()) {
+                    Toast.makeText(AuthActivity.this, "Введите Е-мэйл", Toast.LENGTH_SHORT).show();
+                } else {
 
-            if (user.getUid().equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") ) {
-                Toast.makeText(AuthActivity.this, "Админ, здарова", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AuthActivity.this, AdminActivity.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                startActivity(intent);
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(ETemail.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(AuthActivity.this, "Отправлено на почту", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AuthActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
-        }
+        });
     }
 
     @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.btn_sign_in) {
-            signin(ETemail.getText().toString(), ETpassword.getText().toString());
-        } else if (view.getId() == R.id.btn_registration) {
-            registration(ETemail.getText().toString(), ETpassword.getText().toString());
-        }
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 
     public void signin(String email, String password) {
@@ -138,26 +150,31 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                         String user = mAuth.getUid();
 
-                        if (mAuth.getUid() == null){
+                        if (mAuth.getUid() == null) {
                             user = "4GCDV8FyQfbnMLngj5jnYGxf8Md2";
                         }
 
-                        if(user.equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") && task.isSuccessful() ){
+                        if (user.equals("4GCDV8FyQfbnMLngj5jnYGxf8Md2") && task.isSuccessful()) {
+
+                            progressBar.setVisibility(View.GONE);
 
                             Toast.makeText(AuthActivity.this, "Админ, здарова", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(AuthActivity.this, AdminActivity.class);
                             startActivity(intent);
 
-                        }
+                        } else if (task.isSuccessful()) {
 
-                        else if(task.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
+
                             Toast.makeText(AuthActivity.this, "Aвторизация успешна", Toast.LENGTH_SHORT).show();
-
 
                             Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                             startActivity(intent);
 
                         } else {
+
+                            progressBar.setVisibility(View.GONE);
+
                             Toast.makeText(AuthActivity.this, "Aвторизация провалена", Toast.LENGTH_SHORT).show();
                         }
 
@@ -165,33 +182,4 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
-    public void registration(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(AuthActivity.this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                    startActivity(intent);
-                } else
-                    Toast.makeText(AuthActivity.this, "Регистрация провалена", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void checkFieldsForEmptyValues() {
-
-        String s1 = ETemail.getText().toString();
-        String s2 = ETpassword.getText().toString();
-
-        if (s1.length() > 0 && s2.length() > 0) {
-            btn_sign_in.setEnabled(true);
-            btn_registration.setEnabled(true);
-        } else {
-            btn_sign_in.setEnabled(false);
-            btn_registration.setEnabled(false);
-        }
-
-    }
 }

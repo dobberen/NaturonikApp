@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.alpheus.naturonik.Activities.AuthActivity;
+import com.alpheus.naturonik.Activities.RegistrationActivity;
 import com.alpheus.naturonik.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -51,7 +52,7 @@ public class Account extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_add);
-        MenuItem item1 = menu.findItem(R.id.action_search);
+        MenuItem item1 = menu.findItem(R.id.action_add_product);
         if (item != null || item1 != null)
             item.setVisible(false);
             item1.setVisible(false);

@@ -1,5 +1,7 @@
 package com.alpheus.naturonik.Models;
 
+import com.google.firebase.database.Exclude;
+
 public class Product {
     private String countrys_name;
     private String sorts_name;
@@ -89,6 +91,5 @@ public class Product {
     public void setNutritional_value(String nutritional_value) {
         this.nutritional_value = nutritional_value;
     }
-
 }
 

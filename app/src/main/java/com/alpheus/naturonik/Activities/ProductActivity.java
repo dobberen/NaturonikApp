@@ -1,22 +1,16 @@
 package com.alpheus.naturonik.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,7 +44,6 @@ public class ProductActivity extends AppCompatActivity {
 
     private String receiverProductID;
     private String img1;
-    private String amount = "1";
     private Integer resultPrice;
     private Button toCartButton;
     private FloatingActionButton fav_button;
@@ -60,7 +53,7 @@ public class ProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product1);
+        setContentView(R.layout.activity_product);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -76,6 +69,8 @@ public class ProductActivity extends AppCompatActivity {
         img_id = findViewById(R.id.product_thumbnail);
 
         resultPrice_tv = (TextView) findViewById(R.id.product_summ_tv);
+
+        tv_price.setText("0");
 
         retriveProductInfo();
 
@@ -199,6 +194,10 @@ public class ProductActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                if (tv_price.getText().equals("")){
+                    tv_price.setText("0");
+                }
 
                 Integer weight = Integer.parseInt(spinner.getSelectedItem().toString());
                 Integer amount = Integer.parseInt(spinner1.getSelectedItem().toString());

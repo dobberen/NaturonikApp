@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
+import com.alpheus.naturonik.Activities.UpdateProductActivity;
 import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
@@ -88,7 +89,7 @@ public class Search extends Fragment {
                         try {
                             holder.description.setText(model.getDescription());
                             Glide.with(getActivity())
-                                    .load(model.getImg())
+                                    .load("https://naturonik.ru/img/" + model.getImg())
                                     .into(holder.thumbnail);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Произошла ошибка", Toast.LENGTH_SHORT).show();
@@ -109,6 +110,7 @@ public class Search extends Fragment {
                                 startActivity(intent);
                             }
                         });
+
                     }
 
                     @NonNull
@@ -174,7 +176,7 @@ public class Search extends Fragment {
             protected void onBindViewHolder(@NonNull ProductsViewHolder holder, final int position, final @NonNull Product model) {
 
                 holder.setDescription(model.getDescription());
-                holder.setThumbnail(getContext(), model.getImg());
+                holder.setThumbnail(getContext(), "https://naturonik.ru/img/" +  model.getImg());
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

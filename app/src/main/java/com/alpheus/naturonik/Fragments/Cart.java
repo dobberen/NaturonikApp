@@ -3,7 +3,9 @@ package com.alpheus.naturonik.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -164,8 +166,11 @@ public class Cart extends Fragment {
             public void onClick(View view) {
 
                 Fragment fragment = new Search();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                BottomNavigationView botNavView = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation_view);
+                botNavView.getMenu().getItem(3).setChecked(true);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, fragment).commit();
             }
         });
 

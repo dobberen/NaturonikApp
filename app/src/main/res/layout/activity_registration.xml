@@ -10,7 +10,6 @@
 
 
     <LinearLayout
-        android:id="@+id/ll_auth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -82,8 +81,24 @@
                 android:textSize="22sp" />
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/et_password_repeat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Повторите пароль"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </android.support.design.widget.TextInputLayout>
+
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_registration"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -91,29 +106,18 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="Войти" />
+            android:text="Создать аккаунт" />
 
         <TextView
-            android:id="@+id/link_registration"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:fontFamily="@font/roboto_thin"
-            android:gravity="center"
-            android:text="Нет аккаунта? Создать"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/link_forget_pass"
+            android:id="@+id/link_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/roboto_thin"
             android:gravity="center"
-            android:text="Забыли пароль? Восстановить"
+            android:text="Уже зарегистрированы? Авторизоваться"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 
