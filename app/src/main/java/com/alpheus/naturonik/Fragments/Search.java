@@ -205,6 +205,21 @@ public class Search extends Fragment {
 
         recyclerView.setAdapter(searchRecyclerAdapter);
 
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         searchRecyclerAdapter.startListening();
     }
 

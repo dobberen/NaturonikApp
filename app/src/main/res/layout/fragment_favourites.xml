@@ -18,7 +18,9 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"/>
 
 
     <LinearLayout
@@ -34,7 +36,8 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/ic_empty" />
+            android:background="@mipmap/ic_placeholder"
+            />
 
         <TextView
             android:layout_width="wrap_content"
