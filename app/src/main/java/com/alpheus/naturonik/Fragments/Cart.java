@@ -2,14 +2,14 @@ package com.alpheus.naturonik.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LongDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alpheus.naturonik.Activities.ProductActivity;
-import com.alpheus.naturonik.Models.Product;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -36,9 +34,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Iterator;
+import java.util.Map;
+
 public class Cart extends Fragment {
 
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase, mDatabase1;
     private RecyclerView recyclerView;
 
     private ProgressBar progressBar;
@@ -46,6 +47,10 @@ public class Cart extends Fragment {
 
     private ScrollView scrollView;
     private Button buyBtn, btnToShop;
+
+    private TextView amountResultTv, priceResultTv;
+
+    private int totalAmount, totalPrice;
 
     public Cart() {
 
@@ -58,6 +63,9 @@ public class Cart extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_cart, container, false);
         setHasOptionsMenu(true);
 
+        amountResultTv = (TextView) view.findViewById(R.id.amount_cart_tv);
+        priceResultTv = (TextView) view.findViewById(R.id.price_cart_tv);
+
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         placeholder = (LinearLayout) view.findViewById(R.id.placeholder_ll_cart);
 
@@ -66,7 +74,7 @@ public class Cart extends Fragment {
 
         btnToShop = (Button) view.findViewById(R.id.btn_to_shop);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("cart")
                 .child("users").child(user.getUid());
@@ -91,13 +99,16 @@ public class Cart extends Fragment {
                             holder.description_tv.setText(model.getDescription());
                             holder.energy_tv.setText(model.getEnergy_value());
                             holder.nutrional_tv.setText(model.getNutritional_value());
-                            holder.amount_tv.setText(model.getAmount());
-                            holder.price_tv.setText(model.getPrice());
+                            holder.amount_tv.setText("Вес: " + model.getAmount() + " грамм");
+                            holder.price_tv.setText("Цена за кг: " + model.getPrice() + " рублей");
+                            holder.total_price_tv.setText("Итого: " + model.getTotal_price() + " рублей");
+
 
 
                             Glide.with(getActivity())
                                     .load("https://naturonik.ru/img/" + model.getImg())
                                     .into(holder.thumbnail);
+
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Произошла ошибка", Toast.LENGTH_SHORT).show();
                         }
@@ -138,14 +149,14 @@ public class Cart extends Fragment {
                     progressBar.setVisibility(View.GONE);
                 }
 
-                if(!dataSnapshot.exists()){
+                if (!dataSnapshot.exists()) {
 
                     scrollView.setVisibility(View.GONE);
                     buyBtn.setVisibility(View.GONE);
                     placeholder.setVisibility(View.VISIBLE);
                 }
 
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
 
                     scrollView.setVisibility(View.VISIBLE);
                     buyBtn.setVisibility(View.VISIBLE);
@@ -166,11 +177,41 @@ public class Cart extends Fragment {
             public void onClick(View view) {
 
                 Fragment fragment = new Search();
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Поиск");
                 BottomNavigationView botNavView = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation_view);
                 botNavView.getMenu().getItem(3).setChecked(true);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                totalPrice = 0;
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    Map<String, Object> map = (Map<String, Object>) ds.getValue();
+                    Object price = map.get("total_price");
+                    int pValue = Integer.parseInt(String.valueOf(price));
+                    totalPrice += pValue;
+
+                    Log.d("Fiiire", "total= " + totalPrice);
+                    Log.d("Fiiire", "count= " + dataSnapshot.getChildrenCount());
+
+                    priceResultTv.setText("Итого: " + String.valueOf(totalPrice));
+                }
+
+
+                amountResultTv.setText("Число позиций: " + String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
@@ -180,7 +221,7 @@ public class Cart extends Fragment {
 
     public static class ProductsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView description_tv, energy_tv, nutrional_tv, amount_tv, price_tv;
+        TextView description_tv, energy_tv, nutrional_tv, amount_tv, price_tv, total_price_tv;
         ImageView thumbnail;
 
         public ProductsViewHolder(@NonNull View itemView) {
@@ -192,6 +233,7 @@ public class Cart extends Fragment {
             nutrional_tv = itemView.findViewById(R.id.nutritional_cart_tv);
             amount_tv = itemView.findViewById(R.id.amount_cart_tv);
             price_tv = itemView.findViewById(R.id.price_cart_tv);
+            total_price_tv = itemView.findViewById(R.id.total_price_cart_tv);
             thumbnail = itemView.findViewById(R.id.thumbnail);
         }
     }

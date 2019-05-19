@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.alpheus.naturonik.Fragments.Account;
 import com.alpheus.naturonik.Fragments.Cart;
@@ -16,6 +17,9 @@ import com.alpheus.naturonik.Fragments.Search;
 import com.alpheus.naturonik.R;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private long backPressedTime;
+    private Toast backToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_add:
                 Intent intent = new Intent(this, AddProductActivity.class);
                 startActivity(intent);
@@ -89,7 +93,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
 
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
 
+            backToast.cancel();
+            super.onBackPressed();
+            finish();
+            moveTaskToBack(true);
+            return;
+        } else {
+
+            backToast = Toast.makeText(getBaseContext(), "Нажмите еще раз, чтобы выйти", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+
+        backPressedTime = System.currentTimeMillis();
+
+    }
 }
 

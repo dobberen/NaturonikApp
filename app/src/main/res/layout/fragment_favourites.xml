@@ -19,8 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/colorPrimary"/>
+        android:theme="@style/ProgressBar" />
 
 
     <LinearLayout
@@ -32,12 +31,11 @@
         android:visibility="invisible">
 
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
-            android:background="@mipmap/ic_placeholder"
-            />
+            android:background="@drawable/ic_empty" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -44,7 +45,8 @@ public class ProductActivity extends AppCompatActivity {
 
     private String receiverProductID;
     private String img1;
-    private Integer resultPrice;
+
+    private Integer weight, amount, productPrice, resultPrice, resultWeight;
     private Button toCartButton;
     private FloatingActionButton fav_button;
     private TextView resultPrice_tv;
@@ -58,6 +60,8 @@ public class ProductActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         receiverProductID = getIntent().getExtras().get("itemPosition").toString();
+
+        fav_button = findViewById(R.id.button_favourite);
 
         tv_product_country = findViewById(R.id.product_country);
         tv_product_sort = findViewById(R.id.product_sort);
@@ -116,11 +120,13 @@ public class ProductActivity extends AppCompatActivity {
                                 if (!dataSnapshot.exists()) {
 
                                     handleSaveDataToFavourites(view);
+                                    fav_button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_favorite_product_on, null));
                                     Toast.makeText(getApplicationContext(), "Добавлено в избранное", Toast.LENGTH_SHORT).show();
 
                                 } else {
 
                                     mDatabase.child("favourites").child("users").child(user.getUid()).child(receiverProductID).setValue(null);
+                                    fav_button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_favorite, null));
                                     Toast.makeText(getApplicationContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -195,15 +201,16 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                if (tv_price.getText().equals("")){
+                if (tv_price.getText().equals("")) {
                     tv_price.setText("0");
                 }
 
-                Integer weight = Integer.parseInt(spinner.getSelectedItem().toString());
-                Integer amount = Integer.parseInt(spinner1.getSelectedItem().toString());
-                Integer productPrice = Integer.parseInt(tv_price.getText().toString());
+                weight = Integer.parseInt(spinner.getSelectedItem().toString());
+                amount = Integer.parseInt(spinner1.getSelectedItem().toString());
+                productPrice = Integer.parseInt(tv_price.getText().toString());
 
-                resultPrice = (productPrice / (1000/ weight) * amount);
+                resultPrice = (productPrice / (1000 / weight) * amount);
+                resultWeight = (weight * amount);
 
                 resultPrice_tv.setText("Итого: " + resultPrice.toString() + " \u20BD");
 
@@ -218,11 +225,12 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Integer weight = Integer.parseInt(spinner.getSelectedItem().toString());
-                Integer amount = Integer.parseInt(spinner1.getSelectedItem().toString());
-                Integer productPrice = Integer.parseInt(tv_price.getText().toString());
+                weight = Integer.parseInt(spinner.getSelectedItem().toString());
+                amount = Integer.parseInt(spinner1.getSelectedItem().toString());
+                productPrice = Integer.parseInt(tv_price.getText().toString());
 
-                resultPrice = (productPrice / (1000/ weight) * amount);
+                resultPrice = (productPrice / (1000 / weight) * amount);
+                resultWeight = (weight * amount);
 
                 resultPrice_tv.setText("Итого: " + resultPrice.toString() + " \u20BD");
             }
@@ -256,7 +264,7 @@ public class ProductActivity extends AppCompatActivity {
 
 
                     tv_product_country.setText(country_id);
-                    tv_product_sort.setText("Сорт: " + sort_id);
+                    tv_product_sort.setText(sort_id);
                     tv_product_description.setText(description);
                     tv_price.setText(price);
                     tv_about.setText(about);
@@ -284,9 +292,11 @@ public class ProductActivity extends AppCompatActivity {
                         fav_button = findViewById(R.id.button_favourite);
 
                         if (dataSnapshot.exists()) {
-                            fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
+                            //fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_product_on, getApplicationContext().getTheme()));
+                            fav_button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_favorite_product_on, null));
                         } else {
-                            fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
+                            //fav_button.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite, getApplicationContext().getTheme()));
+                            fav_button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_favorite, null));
                         }
                     }
 
@@ -345,13 +355,13 @@ public class ProductActivity extends AppCompatActivity {
                 img1,
                 tv_product_description.getText().toString(),
                 tv_price.getText().toString(),
-                "1",
+                resultPrice.toString(),
+                resultWeight.toString(),
                 tv_energy.getText().toString(),
                 tv_nutritional.getText().toString());
 
         mDatabase.child("cart").child("users").child(user.getUid()).child(receiverProductID).setValue(cart);
     }
-
 }
 
 

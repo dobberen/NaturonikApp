@@ -8,7 +8,7 @@
     android:layout_margin="8dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    cardview:cardCornerRadius="8dp">
+    cardview:cardCornerRadius="12dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -70,6 +70,13 @@
 
             <TextView
                 android:id="@+id/price_cart_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="300 рублей" />
+
+            <TextView
+                android:id="@+id/total_price_cart_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"

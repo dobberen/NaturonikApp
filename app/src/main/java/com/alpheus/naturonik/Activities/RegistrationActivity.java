@@ -16,8 +16,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationActivity extends AppCompatActivity{
+
+    private long backPressedTime;
+    private Toast backToast;
 
     private FirebaseAuth mAuth;
 
@@ -51,6 +56,7 @@ public class RegistrationActivity extends AppCompatActivity{
                     }
                     else {
                         registration(ETemail.getText().toString(), ETpassword.getText().toString());
+
                     }
 
                 }
@@ -98,5 +104,26 @@ public class RegistrationActivity extends AppCompatActivity{
                     Toast.makeText(RegistrationActivity.this, "Регистрация провалена/Е-мэйл введен неверно", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+
+            backToast.cancel();
+            super.onBackPressed();
+            finish();
+            moveTaskToBack(true);
+            return;
+        } else {
+
+            backToast = Toast.makeText(getBaseContext(), "Нажмите еще раз, чтобы выйти", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+
+        backPressedTime = System.currentTimeMillis();
+
     }
 }

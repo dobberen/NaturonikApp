@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.alpheus.naturonik.AdminFragments.Account;
 import com.alpheus.naturonik.AdminFragments.Main;
@@ -14,6 +15,9 @@ import com.alpheus.naturonik.AdminFragments.Search;
 import com.alpheus.naturonik.R;
 
 public class AdminActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private long backPressedTime;
+    private Toast backToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,5 +71,25 @@ public class AdminActivity extends AppCompatActivity implements BottomNavigation
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+
+            backToast.cancel();
+            super.onBackPressed();
+            finish();
+            moveTaskToBack(true);
+            return;
+        } else {
+
+            backToast = Toast.makeText(getBaseContext(), "Нажмите еще раз, чтобы выйти", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+
+        backPressedTime = System.currentTimeMillis();
+
     }
 }

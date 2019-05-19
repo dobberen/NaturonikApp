@@ -23,7 +23,7 @@
                 <com.daimajia.slider.library.SliderLayout
                     android:id="@+id/slider"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp">
+                    android:layout_height="400dp">
 
                 </com.daimajia.slider.library.SliderLayout>
 
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:gravity="center"
-                android:text="Хиты продаж"
+                android:text="Хиты продаж планшет"
                 android:textSize="20sp"
                 app:layout_constraintTop_toBottomOf="@+id/slider_card" />
 

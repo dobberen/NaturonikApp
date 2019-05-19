@@ -30,4 +30,16 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
+    <style name="ProgressBar" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <style name="EditTextColor" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorAccent">@color/dark_grey</item>
+    </style>
+
 </resources>

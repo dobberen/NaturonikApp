@@ -12,227 +12,226 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/button_choose_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Выберите файл" />
+        <Button
+            android:id="@+id/button_choose_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выберите файл" />
 
-
-
-    <EditText
-        android:id="@+id/et_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@id/button_choose_image"
-        android:hint="Наименование"
-        android:inputType="textCapSentences" />
-
-    <TextView
-        android:id="@+id/tv_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/et_description"
-        android:hint="Наименование" />
-
-    <EditText
-        android:id="@+id/et_about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_description"
-        android:layout_marginStart="16dp"
-        android:hint="Описание"
-        android:inputType="textCapSentences" />
-
-    <TextView
-        android:id="@+id/tv_about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/et_about"
-        android:hint="Описание" />
-
-    <EditText
-        android:id="@+id/et_country"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_about"
-        android:layout_marginStart="16dp"
-        android:hint="Страна"
-        android:inputType="textCapSentences" />
-
-    <TextView
-        android:id="@+id/tv_country"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/et_country"
-        android:hint="Страна" />
-
-    <EditText
-        android:id="@+id/et_sort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_country"
-        android:layout_marginStart="16dp"
-        android:hint="Сорт"
-        android:inputType="textCapSentences" />
-
-    <TextView
-        android:id="@+id/tv_sort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/et_sort"
-        android:hint="Сорт" />
-
-    <EditText
-        android:id="@+id/et_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_sort"
-        android:layout_marginStart="16dp"
-        android:hint="Цена/кг"
-        android:inputType="number" />
-
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/et_price"
-        android:hint="Цена/кг" />
-
-    <LinearLayout
-        android:id="@+id/ll_energy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/tv_price"
-        android:weightSum="2">
 
         <EditText
-            android:id="@+id/et_energy1"
+            android:id="@+id/et_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_choose_image"
+            android:layout_marginStart="16dp"
+            android:hint="Наименование"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_description"
+            android:layout_marginStart="16dp"
+            android:hint="Наименование" />
+
+        <EditText
+            android:id="@+id/et_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_description"
+            android:layout_marginStart="16dp"
+            android:hint="Описание"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:id="@+id/tv_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_about"
+            android:layout_marginStart="16dp"
+            android:hint="Описание" />
+
+        <EditText
+            android:id="@+id/et_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_about"
+            android:layout_marginStart="16dp"
+            android:hint="Страна"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:id="@+id/tv_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_country"
+            android:layout_marginStart="16dp"
+            android:hint="Страна" />
+
+        <EditText
+            android:id="@+id/et_sort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_country"
+            android:layout_marginStart="16dp"
+            android:hint="Сорт"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:id="@+id/tv_sort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_sort"
+            android:layout_marginStart="16dp"
+            android:hint="Сорт" />
+
+        <EditText
+            android:id="@+id/et_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_sort"
+            android:layout_marginStart="16dp"
+            android:hint="Цена/кг"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_price"
+            android:layout_marginStart="16dp"
+            android:hint="Цена/кг" />
+
+        <LinearLayout
+            android:id="@+id/ll_energy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_price"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <EditText
+                android:id="@+id/et_energy1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_energy"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:hint="Ккал"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/et_energy2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_energy"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:hint="Кдж"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_energy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll_energy"
             android:layout_marginStart="16dp"
-            android:hint="Ккал"
-            android:inputType="numberDecimal"
-            android:layout_weight="1"/>
+            android:hint="Энергетическая ценность" />
 
-        <EditText
-            android:id="@+id/et_energy2"
+        <LinearLayout
+            android:id="@+id/ll_nutritional"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_energy"
-            android:layout_marginStart="16dp"
-            android:hint="Кдж"
-            android:inputType="numberDecimal"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_energy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/ll_energy"
-        android:hint="Энергетическая ценность" />
-
-    <LinearLayout
-        android:id="@+id/ll_nutritional"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/tv_energy"
-        android:weightSum="3">
+            android:layout_below="@id/tv_energy"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
 
-        <EditText
-            android:id="@+id/et_nutritional1"
+            <EditText
+                android:id="@+id/et_nutritional1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_energy"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:hint="Белки"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/et_nutritional2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_energy"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:hint="Жиры"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/et_nutritional3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_energy"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:hint="Углеводы"
+                android:inputType="numberDecimal" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_nutritional"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_energy"
+            android:layout_below="@+id/ll_nutritional"
             android:layout_marginStart="16dp"
-            android:hint="Белки"
-            android:inputType="numberDecimal"
-            android:layout_weight="1"/>
+            android:hint="Пищевая ценность" />
 
-        <EditText
-            android:id="@+id/et_nutritional2"
+
+        <LinearLayout
+            android:id="@+id/ll_images"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_energy"
-            android:layout_marginStart="16dp"
-            android:hint="Жиры"
-            android:inputType="numberDecimal"
-            android:layout_weight="1"/>
+            android:layout_below="@id/tv_nutritional"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <EditText
-            android:id="@+id/et_nutritional3"
+            <ImageView
+                android:id="@+id/image_view_from"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark" />
+
+            <ImageView
+                android:id="@+id/image_view_to"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary" />
+
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_energy"
-            android:layout_marginStart="16dp"
-            android:hint="Углеводы"
-            android:inputType="numberDecimal"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_nutritional"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_below="@+id/ll_nutritional"
-        android:hint="Пищевая ценность" />
-
-
-    <LinearLayout
-        android:id="@+id/ll_images"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/tv_nutritional"
-        android:layout_marginTop="16dp"
-        android:weightSum="2">
-
-        <ImageView
-            android:id="@+id/image_view_from"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimaryDark"/>
-
-        <ImageView
-            android:id="@+id/image_view_to"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"/>
-
-
-    </LinearLayout>
-
-
-    <View
-        android:id="@+id/view"
-        android:layout_below="@+id/ll_images"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginBottom="16dp"/>
+            android:layout_height="1dp"
+            android:layout_below="@+id/ll_images"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/darker_gray" />
 
         <LinearLayout
             android:id="@+id/ll_bot_buttons"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_below="@+id/view"
+            android:orientation="horizontal"
             android:weightSum="3">
 
 
@@ -240,28 +239,27 @@
                 android:id="@+id/button_upload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Изменить"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Изменить" />
 
             <Button
                 android:id="@+id/button_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Удалить"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Удалить" />
 
             <TextView
                 android:id="@+id/text_view_show_uploads"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Показать товары"
-                android:textSize="16sp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:layout_gravity="center"/>
+                android:text="Показать товары"
+                android:textSize="16sp" />
 
         </LinearLayout>
-
 
 
     </RelativeLayout>
