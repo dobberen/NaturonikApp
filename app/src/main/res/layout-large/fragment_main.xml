@@ -23,11 +23,21 @@
                 <com.daimajia.slider.library.SliderLayout
                     android:id="@+id/slider"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp">
+                    android:layout_height="450dp">
 
                 </com.daimajia.slider.library.SliderLayout>
 
             </android.support.v7.widget.CardView>
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/dark_grey"
+                app:layout_constraintTop_toBottomOf="@id/slider_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/main_hits_tv"
@@ -37,12 +47,12 @@
                 android:gravity="center"
                 android:text="Хиты продаж планшет"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/slider_card" />
+                app:layout_constraintTop_toBottomOf="@+id/view1" />
 
             <LinearLayout
                 android:id="@+id/main_hits_ll"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="300dp"
                 android:layout_margin="4dp"
                 android:orientation="horizontal"
                 android:weightSum="2"
@@ -59,7 +69,8 @@
                     <ImageView
                         android:id="@+id/hit1_iv"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                        android:layout_height="250dp"
+                        android:scaleType="centerCrop"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -79,7 +90,8 @@
                     <ImageView
                         android:id="@+id/hit2_iv"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                        android:layout_height="250dp"
+                        android:scaleType="centerCrop"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -91,6 +103,17 @@
 
             </LinearLayout>
 
+            <View
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/dark_grey"
+                app:layout_constraintTop_toBottomOf="@id/main_hits_ll"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"/>
+
+
             <TextView
                 android:id="@+id/offer_tv"
                 android:layout_width="match_parent"
@@ -99,7 +122,7 @@
                 android:gravity="center"
                 android:text="Акции"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/main_hits_ll" />
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
 
             <LinearLayout
                 android:id="@+id/offer_ll"
@@ -113,7 +136,8 @@
                 <ImageView
                     android:id="@+id/offer_iv"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -123,6 +147,16 @@
 
             </LinearLayout>
 
+            <View
+                android:id="@+id/view3"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/dark_grey"
+                app:layout_constraintTop_toBottomOf="@id/offer_ll"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"/>
+
             <TextView
                 android:id="@+id/recipes_tv"
                 android:layout_width="match_parent"
@@ -131,7 +165,8 @@
                 android:gravity="center"
                 android:text="Попробуйте"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/offer_ll" />
+                app:layout_constraintTop_toBottomOf="@+id/view3" />
+
 
             <LinearLayout
                 android:id="@+id/recipes_ll"
@@ -145,7 +180,8 @@
                 <ImageView
                     android:id="@+id/recipes_iv"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -153,6 +189,16 @@
                     android:gravity="center"
                     android:text="Кекс &#34;Лакомка&#34; с изюмом и орехами" />
             </LinearLayout>
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/dark_grey"
+                app:layout_constraintTop_toBottomOf="@id/recipes_ll"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/contacts_tv"
@@ -162,18 +208,18 @@
                 android:gravity="center"
                 android:text="Свяжитесь с нами"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/recipes_ll" />
+                app:layout_constraintTop_toBottomOf="@+id/view4" />
 
             <LinearLayout
                 android:id="@+id/contacts_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal"
                 android:padding="4dp"
                 android:weightSum="2"
                 app:layout_constraintTop_toBottomOf="@id/contacts_tv"
-                tools:layout_editor_absoluteX="4dp">
+                >
 
 
                 <ImageView

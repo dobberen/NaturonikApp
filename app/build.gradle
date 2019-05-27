@@ -12,6 +12,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+
     }
     buildTypes {
         release {
@@ -49,9 +50,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
 
-
     implementation 'com.rhexgomez.typer:typer-roboto:2.0.0'
 
+    implementation 'com.sun.mail:android-mail:1.5.5'
+    implementation 'com.sun.mail:android-activation:1.5.5'
 
     testImplementation 'junit:junit:4.12'
 

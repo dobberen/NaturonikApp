@@ -58,7 +58,7 @@ public class Account extends Fragment {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private DatabaseReference mData;
 
-    private EditText etEmail, etPhone, etVK, etBirthday;
+    private EditText etEmail, etPhone, etVK, etBirthday, etAddress;
     private LinearLayout changeEmailBtn, changePassBtn, signOutBtn;
     private ImageView changeUsernameBtn;
     private TextView tvUsername;
@@ -81,6 +81,7 @@ public class Account extends Fragment {
         etPhone = view.findViewById(R.id.et_telephone);
         etVK = view.findViewById(R.id.et_vk);
         etBirthday = view.findViewById(R.id.et_birthday);
+        etAddress = view.findViewById(R.id.et_address);
 
         tvUsername = view.findViewById(R.id.tv_username);
 
@@ -184,7 +185,7 @@ public class Account extends Fragment {
 
     private void saveAccountInfo() {
 
-        if(etPhone.length() > 0){
+        if (etPhone.length() > 0) {
 
             etPhone.getText().toString();
             etPhone.setText(etPhone.getText().toString());
@@ -192,7 +193,7 @@ public class Account extends Fragment {
             mData.child("users").child(user.getUid()).child("telephone").setValue(etPhone.getText().toString());
         }
 
-        if (etVK.length() > 0){
+        if (etVK.length() > 0) {
 
             etVK.getText().toString();
             etVK.setText(etVK.getText().toString());
@@ -200,6 +201,13 @@ public class Account extends Fragment {
             mData.child("users").child(user.getUid()).child("vk_link").setValue(etVK.getText().toString());
         }
 
+        if (etAddress.length() > 0) {
+
+            etAddress.getText().toString();
+            etAddress.setText(etAddress.getText().toString());
+
+            mData.child("users").child(user.getUid()).child("address").setValue(etAddress.getText().toString());
+        }
 
 
     }
@@ -382,7 +390,7 @@ public class Account extends Fragment {
     //--------------------Обновление календаря------------------------------------------------------
 
     private void updateLabel() {
-        String mFormat = "MM/dd/yy";
+        String mFormat = "dd/MM/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(mFormat, Locale.ENGLISH);
 
         etBirthday.setText(sdf.format(mCalendar.getTime()));
@@ -436,6 +444,14 @@ public class Account extends Fragment {
 
                         if (birthday.length() > 0) {
                             etBirthday.setText(birthday);
+                        }
+                    }
+
+                    if (dataSnapshot.child("address").exists()) {
+                        String birthday = dataSnapshot.child("address").getValue().toString();
+
+                        if (birthday.length() > 0) {
+                            etAddress.setText(birthday);
                         }
                     }
 

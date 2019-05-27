@@ -7,13 +7,15 @@ public class User {
     private String telephone;
     private String vk_link;
     private String birthday;
+    private String address;
 
-    public User(String user_img, String user_name, String telephone, String vk_link, String birthday) {
+    public User(String user_img, String user_name, String telephone, String vk_link, String birthday, String address) {
         this.user_img = user_img;
         this.user_name = user_name;
         this.telephone = telephone;
         this.vk_link = vk_link;
         this.birthday = birthday;
+        this.address = address;
     }
 
     public User() {
@@ -39,6 +41,10 @@ public class User {
         return birthday;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     public void setUser_img(String user_img) {
         this.user_img = user_img;
     }
@@ -57,5 +63,9 @@ public class User {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

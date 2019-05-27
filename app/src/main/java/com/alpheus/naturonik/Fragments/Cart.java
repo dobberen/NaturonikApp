@@ -2,14 +2,12 @@ package com.alpheus.naturonik.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LongDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alpheus.naturonik.Activities.OrderActivity;
 import com.alpheus.naturonik.Activities.ProductActivity;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
@@ -34,12 +33,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Iterator;
 import java.util.Map;
 
 public class Cart extends Fragment {
 
-    private DatabaseReference mDatabase, mDatabase1;
+    private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
 
     private ProgressBar progressBar;
@@ -126,6 +124,7 @@ public class Cart extends Fragment {
                                 startActivity(intent);
                             }
                         });
+
                     }
 
                     @NonNull
@@ -185,7 +184,7 @@ public class Cart extends Fragment {
             }
         });
 
-
+    //--------------------Подсчет числа позиций и итоговой суммы------------------------------------
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -199,8 +198,8 @@ public class Cart extends Fragment {
                     int pValue = Integer.parseInt(String.valueOf(price));
                     totalPrice += pValue;
 
-                    Log.d("Fiiire", "total= " + totalPrice);
-                    Log.d("Fiiire", "count= " + dataSnapshot.getChildrenCount());
+                    //Log.d("Fiiire", "total= " + totalPrice);
+                    //Log.d("Fiiire", "count= " + dataSnapshot.getChildrenCount());
 
                     priceResultTv.setText("Итого: " + String.valueOf(totalPrice));
                 }
@@ -212,6 +211,15 @@ public class Cart extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        buyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity(), OrderActivity.class);
+                startActivity(intent);
             }
         });
 
