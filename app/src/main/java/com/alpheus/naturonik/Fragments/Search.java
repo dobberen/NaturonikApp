@@ -48,6 +48,8 @@ public class Search extends Fragment {
 
     private ProgressBar progressBar;
 
+    private Query finalQuery;
+
     public Search() {
 
     }
@@ -74,10 +76,24 @@ public class Search extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
 
-        Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description");
+        Bundle bundle = this.getArguments();
+
+        String query1 = "";
+
+        if (bundle != null){
+
+            query1 = bundle.getString("query" );
+            finalQuery = mDatabaseSearch.orderByChild("sorts_name").equalTo(query1);
+        }
+
+        if (bundle == null){
+
+            finalQuery = mDatabaseSearch.orderByChild("description");
+        }
+
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
-                .setQuery(firebaseSearchQuery, Product.class)
+                .setQuery(finalQuery, Product.class)
                 .setLifecycleOwner(this)
                 .build();
 
@@ -164,6 +180,7 @@ public class Search extends Fragment {
         Toast.makeText(getActivity(), "Поиск начался", Toast.LENGTH_SHORT).show();
 
         Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description").startAt(searchText).endAt(searchText + "\uf8ff");
+
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
                 .setQuery(firebaseSearchQuery, Product.class)

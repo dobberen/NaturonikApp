@@ -1,7 +1,11 @@
 package com.alpheus.naturonik.AdminFragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.alpheus.naturonik.Fragments.Search;
 import com.alpheus.naturonik.R;
 import com.bumptech.glide.Glide;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -22,12 +28,13 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import java.util.HashMap;
 
 public class Main extends Fragment
-        implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+        implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener {
 
     SliderLayout sliderLayout;
     HashMap<String, String> HashMapForURL;
-    ImageView hitImageView, hitImageView2, offerImageView, recipesImageView, contactsEmailImageView,
-            contactsWhatsUpImageView;
+
+    ImageView peanutIv, cashewIv, pistachiosIv, walnutIv, macadamiaIv, almondIv, hazelnutIv;
+    ImageView contactsEmail, contactsWhatsUp, contactsPhone;
 
     public Main() {
     }
@@ -43,20 +50,60 @@ public class Main extends Fragment
 
         sliderLayout = (SliderLayout) view.findViewById(R.id.slider);
 
-        hitImageView = view.findViewById(R.id.hit1_iv);
-        hitImageView2 = view.findViewById(R.id.hit2_iv);
-        offerImageView = view.findViewById(R.id.offer_iv);
-        recipesImageView = view.findViewById(R.id.recipes_iv);
-        contactsEmailImageView = view.findViewById(R.id.contacts_email_iv);
-        contactsWhatsUpImageView = view.findViewById(R.id.contacts_whatsup_iv);
+        peanutIv = view.findViewById(R.id.peanut_iv);
+        cashewIv = view.findViewById(R.id.cashew_iv);
+        pistachiosIv = view.findViewById(R.id.pistachios_iv);
+        walnutIv = view.findViewById(R.id.walnut_iv);
+        macadamiaIv = view.findViewById(R.id.macadamia_iv);
+        almondIv = view.findViewById(R.id.almond_iv);
+        hazelnutIv = view.findViewById(R.id.hazelnut_iv);
 
-        Glide.with(getActivity()).load("https://naturonik.ru/img/Nuts/arahis/arahis_och_sir_3842.jpg").into(hitImageView);
-        Glide.with(getActivity()).load("https://naturonik.ru/img/Nuts/keshu/keshu_ww240.jpg").into(hitImageView2);
-        Glide.with(getActivity()).load("https://i.pinimg.com/originals/d0/e9/5c/d0e95cbdcc61272c480759f17fd7228e.jpg").into(offerImageView);
-        Glide.with(getActivity()).load("https://img.povar.ru/main/b9/85/fa/37/keks_quotlakomkaquot_s_iziumom_i_orehami-401786.JPG").into(recipesImageView);
-        Glide.with(getActivity()).load("https://cdn3.iconfinder.com/data/icons/email-51/48/25-512.png").into(contactsEmailImageView);
-        Glide.with(getActivity()).load("https://cdn3.iconfinder.com/data/icons/social-network-30/512/social-01-512.png").into(contactsWhatsUpImageView);
 
+        contactsEmail = view.findViewById(R.id.contacts_email_iv);
+        contactsWhatsUp = view.findViewById(R.id.contacts_whatsup_iv);
+        contactsPhone = view.findViewById(R.id.contacts_phone_iv);
+
+        //---------------------Intent email, whatsup, phone-----------------------------------------
+
+        contactsEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "naturonik.ru@gmail.com"));
+                startActivity(Intent.createChooser(emailIntent, "Chooser Title"));
+            }
+        });
+
+        contactsPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "+79250506165"));
+                startActivity(intent);
+
+            }
+        });
+
+        contactsWhatsUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(getActivity(), "Данная функция пока не доступна. Номер: +7(***)***-**-**", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //---------------------Загрузка картинок "Категории"----------------------------------------
+
+        Glide.with(getActivity()).load("https://naturonik.ru/img/Slider/peanut.jpg").into(peanutIv);
+        Glide.with(getActivity()).load( "https://naturonik.ru/img/Slider/cashew.jpg").into(cashewIv);
+        Glide.with(getActivity()).load("https://naturonik.ru/img/Slider/pistachio.jpg").into(pistachiosIv);
+        Glide.with(getActivity()).load("https://naturonik.ru/img/Slider/walnut.jpg").into(walnutIv);
+        Glide.with(getActivity()).load("https://naturonik.ru/img/Slider/macadamia.jpg").into(macadamiaIv);
+        Glide.with(getActivity()).load("https://naturonik.ru/img/Slider/almond.jpg").into(almondIv);
+        Glide.with(getActivity()).load("https://naturonik.ru/img/Slider/hazelnuts.jpg").into(hazelnutIv);
+
+        //------------------------------------Слайдер-----------------------------------------------
         AddImagesUrlOnline();
 
         for (String name : HashMapForURL.keySet()) {
@@ -87,7 +134,17 @@ public class Main extends Fragment
 
         sliderLayout.setDuration(8000);
 
-        sliderLayout.addOnPageChangeListener(Main.this);
+        sliderLayout.addOnPageChangeListener(com.alpheus.naturonik.AdminFragments.Main.this);
+
+        //--------------------------------Категории товаров-----------------------------------------
+
+        peanutIv.setOnClickListener(this);
+        cashewIv.setOnClickListener(this);
+        pistachiosIv.setOnClickListener(this);
+        walnutIv.setOnClickListener(this);
+        macadamiaIv.setOnClickListener(this);
+        walnutIv.setOnClickListener(this);
+        hazelnutIv.setOnClickListener(this);
 
         return view;
     }
@@ -137,4 +194,70 @@ public class Main extends Fragment
             item1.setVisible(false);
     }
 
+    @Override
+    public void onClick(View v) {
+        Fragment fragment = new Search();
+        Bundle bundle = new Bundle();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        switch (v.getId()) {
+
+            case R.id.peanut_iv:
+                bundle.putString("query", "Арахис");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            case R.id.cashew_iv:
+                bundle.putString("query", "Кешью");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            case R.id.pistachios_iv:
+                bundle.putString("query", "Фисташки");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            case R.id.walnut_iv:
+                bundle.putString("query", "Грецкий орех");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            case R.id.macadamia_iv:
+                bundle.putString("query", "Макадамия");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            case R.id.almond_iv:
+                bundle.putString("query", "Миндаль");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+            case R.id.hazelnut_iv:
+                bundle.putString("query", "Фундук");
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Поиск");
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null).commit();
+                break;
+
+        }
+    }
 }

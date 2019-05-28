@@ -59,7 +59,7 @@ public class Search extends Fragment {
 
     private ProgressBar progressBar;
 
-    private AlertDialog alertDialog;
+    private Query finalQuery;
 
     public Search() {
 
@@ -88,10 +88,24 @@ public class Search extends Fragment {
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        Query firebaseSearchQuery = mDatabaseSearch.orderByChild("description");
+        Bundle bundle = this.getArguments();
+
+        String query1 = "";
+
+        if (bundle != null){
+
+            query1 = bundle.getString("query" );
+            finalQuery = mDatabaseSearch.orderByChild("sorts_name").equalTo(query1);
+        }
+
+        if (bundle == null){
+
+            finalQuery = mDatabaseSearch.orderByChild("description");
+        }
+
 
         FirebaseRecyclerOptions<Product> options = new FirebaseRecyclerOptions.Builder<Product>()
-                .setQuery(firebaseSearchQuery, Product.class)
+                .setQuery(finalQuery, Product.class)
                 .setLifecycleOwner(this)
                 .build();
 

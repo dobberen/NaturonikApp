@@ -58,15 +58,36 @@
 
     </ScrollView>
 
-
-    <Button
-        android:id="@+id/buy_btn"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_gravity="bottom"
-        android:layout_margin="10dp"
-        android:text="Перейти к оформлению заказа"
-        android:visibility="gone" />
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/buy_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            android:text="Перейти к оформлению заказа"
+            android:visibility="gone"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/clear_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            android:text="Очистить корзину"
+            android:visibility="gone"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/placeholder_ll_cart"

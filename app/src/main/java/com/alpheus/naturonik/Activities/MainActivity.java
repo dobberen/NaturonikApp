@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.navigation_main);
+
+
     }
 
     // Bottom Navigation Bar
@@ -50,31 +52,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.navigation_account:
                 getSupportActionBar().setTitle("Профиль");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, accountFragment).commit();
+                        .replace(R.id.fragment_container, accountFragment).addToBackStack(null).commit();
                 return true;
 
             case R.id.navigation_favourite:
                 getSupportActionBar().setTitle("Избранное");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, favouritesFragment).commit();
+                        .replace(R.id.fragment_container, favouritesFragment).addToBackStack(null).commit();
                 return true;
 
             case R.id.navigation_main:
                 getSupportActionBar().setTitle("Главная");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, mainFragment).commit();
+                        .replace(R.id.fragment_container, mainFragment).addToBackStack(null).commit();
                 return true;
 
             case R.id.navigation_search:
                 getSupportActionBar().setTitle("Поиск");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, searchFragment).commit();
+                        .replace(R.id.fragment_container, searchFragment).addToBackStack(null).commit();
                 return true;
 
             case R.id.navigation_cart:
                 getSupportActionBar().setTitle("Корзина");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, cartFragment).commit();
+                        .replace(R.id.fragment_container, cartFragment).addToBackStack(null).commit();
                 return true;
         }
 
@@ -112,5 +114,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         backPressedTime = System.currentTimeMillis();
 
     }
+
+
 }
 

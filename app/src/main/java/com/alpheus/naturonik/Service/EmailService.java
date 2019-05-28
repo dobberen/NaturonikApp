@@ -2,6 +2,9 @@ package com.alpheus.naturonik.Service;
 
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -24,10 +27,10 @@ public class EmailService {
 
     private static Message message;
 
-
     public static void sendEmail(String to, String subject, String msg){
 
-        String from = "naturonik.ru@gmail.com";
+
+        String from = "naturonik.ru@gmail.com" ;
 
         final String username = SMTP_AUTH_USER;
         final String password = SMTP_AUTH_PWD;

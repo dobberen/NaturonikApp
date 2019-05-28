@@ -189,9 +189,9 @@ public class OrderActivity extends AppCompatActivity {
 
     private void retriveUserInfo() {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        DatabaseReference mData = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference mData = FirebaseDatabase.getInstance().getReference();
 
         mData.child("users").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -275,65 +275,77 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                mDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (etName.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(OrderActivity.this, "Введите имя", Toast.LENGTH_LONG).show();
+                } else if (etEmail.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(OrderActivity.this, "Введите адрес электронной почты", Toast.LENGTH_LONG).show();
+                } else if (etPhone.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(OrderActivity.this, "Введите номер телефона", Toast.LENGTH_LONG).show();
+                } else if (etAddress.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(OrderActivity.this, "Введите адрес доставки", Toast.LENGTH_LONG).show();
+                } else {
+                    mDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                        final List<String> products = new ArrayList<String>();
+                            final List<String> products = new ArrayList<String>();
 
-                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
 
-                            String productDesc = childDataSnapshot.child("description").getValue(String.class);
-                            String productAmount = childDataSnapshot.child("amount").getValue(String.class);
-                            products.add(productDesc + " " + productAmount + " грамм");
-                        }
-
-
-                        String listString = "";
-                        for (String s : products) {
-                            listString += s + "\n";
-
-                        }
-
-
-                        try {
-
-                            String to = "naturonik.ru@gmail.com";
-                            String subject = "Заказ";
-                            String message = etName.getText().toString().trim() + "\n"
-                                    + etPhone.getText().toString().trim() + "\n"
-                                    + etAddress.getText().toString().trim() + "\n"
-                                    + listString + "\n"
-                                    + totalPrice1 + "\u20BD";
-
-                            if (to.isEmpty()) {
-                                Toast.makeText(OrderActivity.this, "You must enter a recipient email", Toast.LENGTH_LONG).show();
-                            } else if (subject.isEmpty()) {
-                                Toast.makeText(OrderActivity.this, "You must enter a Subject", Toast.LENGTH_LONG).show();
-                            } else if (message.isEmpty()) {
-                                Toast.makeText(OrderActivity.this, "You must enter a message", Toast.LENGTH_LONG).show();
-                            } else {
-                                //everything is filled out
-                                //send email
-                                new EmailService().sendEmail(to, subject, message);
-                                Toast.makeText(getApplication(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
+                                String productDesc = childDataSnapshot.child("description").getValue(String.class);
+                                String productAmount = childDataSnapshot.child("amount").getValue(String.class);
+                                products.add(productDesc + " " + productAmount + " грамм");
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+
+
+                            String listString = "";
+                            for (String s : products) {
+                                listString += s + "\n";
+
+                            }
+
+
+                            try {
+
+                                String to = "naturonik.ru@gmail.com";
+                                String toClient = user.getEmail();
+                                String subject = "Заказ";
+                                String message = user.getEmail().toString() + "\n"
+                                        + etName.getText().toString().trim() + "\n"
+                                        + etPhone.getText().toString().trim() + "\n"
+                                        + etAddress.getText().toString().trim() + "\n"
+                                        + listString + "\n"
+                                        + totalPrice1 + "\u20BD";
+
+                                if (to.isEmpty()) {
+                                    Toast.makeText(OrderActivity.this, "You must enter a recipient email", Toast.LENGTH_LONG).show();
+                                } else if (subject.isEmpty()) {
+                                    Toast.makeText(OrderActivity.this, "You must enter a Subject", Toast.LENGTH_LONG).show();
+                                } else if (message.isEmpty()) {
+                                    Toast.makeText(OrderActivity.this, "You must enter a message", Toast.LENGTH_LONG).show();
+                                } else {
+                                    //everything is filled out
+                                    //send email
+                                    new EmailService().sendEmail(to, subject, message);
+                                    new EmailService().sendEmail(toClient, subject, message);
+                                    Toast.makeText(getApplication(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+
+                            }
 
                         }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        Log.d("Fiiire",  listString);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+                        }
+                    });
+                }
 
 
             }

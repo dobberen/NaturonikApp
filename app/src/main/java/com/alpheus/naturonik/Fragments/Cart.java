@@ -37,14 +37,14 @@ import java.util.Map;
 
 public class Cart extends Fragment {
 
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase, mCartData;
     private RecyclerView recyclerView;
 
     private ProgressBar progressBar;
     private LinearLayout placeholder;
 
     private ScrollView scrollView;
-    private Button buyBtn, btnToShop;
+    private Button buyBtn, btnToShop, clearBtn;
 
     private TextView amountResultTv, priceResultTv;
 
@@ -69,6 +69,7 @@ public class Cart extends Fragment {
 
         scrollView = (ScrollView) view.findViewById(R.id.cart_scrollview);
         buyBtn = (Button) view.findViewById(R.id.buy_btn);
+        clearBtn = (Button) view.findViewById(R.id.clear_btn);
 
         btnToShop = (Button) view.findViewById(R.id.btn_to_shop);
 
@@ -76,6 +77,8 @@ public class Cart extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("cart")
                 .child("users").child(user.getUid());
+
+        mCartData = FirebaseDatabase.getInstance().getReference();
 
         recyclerView = view.findViewById(R.id.recycler_view_cart);
 
@@ -152,6 +155,7 @@ public class Cart extends Fragment {
 
                     scrollView.setVisibility(View.GONE);
                     buyBtn.setVisibility(View.GONE);
+                    clearBtn.setVisibility(View.GONE);
                     placeholder.setVisibility(View.VISIBLE);
                 }
 
@@ -159,6 +163,7 @@ public class Cart extends Fragment {
 
                     scrollView.setVisibility(View.VISIBLE);
                     buyBtn.setVisibility(View.VISIBLE);
+                    clearBtn.setVisibility(View.VISIBLE);
                     placeholder.setVisibility(View.GONE);
                 }
             }
@@ -181,6 +186,14 @@ public class Cart extends Fragment {
                 botNavView.getMenu().getItem(3).setChecked(true);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+
+        clearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mCartData.child("cart").child("users").child(user.getUid()).setValue(null);
             }
         });
 
